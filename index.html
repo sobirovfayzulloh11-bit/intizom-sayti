@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intizom — Har kuni bir qadam oldinga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <section class="screen active" id="home">
+    <header>
+      <span class="eyebrow">SHAXSIY RIVOJLANISH</span>
+      <h1>Intizom</h1>
+      <p class="subtitle">Har kuni bir qadam oldinga</p>
+      <button id="notifyBtn" class="notify-btn">Bildirishnomalarni yoqish</button>
+      <p id="notifyStatus" class="notify-status"></p>
+    </header>
+
+    <div class="overall-tracker">
+      <div class="tracker-head">
+        <h2>Bugungi umumiy natija</h2>
+        <span class="progress-label" id="overallLabel">0 / 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="overallFill"></div></div>
+    </div>
+
+    <section class="cards">
+      <div class="card" data-target="cat-erta">
+        <span class="card-index">01</span>
+        <h2>Erta turish</h2>
+        <p>Kuningizni tartibli boshlash uchun shaxsiy jadval tuzing.</p>
+      </div>
+      <div class="card" data-target="cat-sport">
+        <span class="card-index">02</span>
+        <h2>Sport bilan shug'ullanish</h2>
+        <p>Jismoniy faollik rejangizni tuzib, kuzatib boring.</p>
+      </div>
+      <div class="card" data-target="cat-ilm">
+        <span class="card-index">03</span>
+        <h2>Ilm olish</h2>
+        <p>Har kuni bilim orttirish uchun o'quv jadvali yarating.</p>
+      </div>
+      <div class="card" data-target="cat-chalg">
+        <span class="card-index">04</span>
+        <h2>Chalg'ituvchilarni kamaytirish</h2>
+        <p>Vaqtingizni himoya qiluvchi qoidalar belgilang.</p>
+      </div>
+    </section>
+
+    <footer><p>© 2026 Intizom loyihasi</p></footer>
+  </section>
+
+  <section class="screen" id="cat-erta" data-category="erta">
+    <button class="back-btn">← Orqaga</button>
+    <h1 class="cat-title">Erta turish</h1>
+    <p class="cat-desc">Erta turish miya faoliyatini yaxshilaydi va kunni tartibli boshlashga yordam beradi. Islomiy an'analarda ham tongning barakali vaqt ekani ko'p ta'kidlangan — Payg'ambarimiz sollallohu alayhi vasallam ummatiga tongdagi ishlarga baraka tilab duo qilganlar. O'zingizga mos jadval tuzing yoki tayyor namunani qo'llang.</p>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <span class="progress-label">0 / 0</span>
+    <div class="schedule-list"></div>
+    <button class="preset-btn">Tayyor jadvalni qo'llash</button>
+    <form class="add-form">
+      <input type="time" class="add-time" required>
+      <input type="text" class="add-text" placeholder="Vazifa nomi" required>
+      <button type="submit">Qo'shish</button>
+    </form>
+  </section>
+
+  <section class="screen" id="cat-sport" data-category="sport">
+    <button class="back-btn">← Orqaga</button>
+    <h1 class="cat-title">Sport bilan shug'ullanish</h1>
+    <p class="cat-desc">Jismoniy faollik nafaqat tanani, balki irodani ham mustahkamlaydi. Kuniga kamida 20-30 daqiqa ajrating.</p>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <span class="progress-label">0 / 0</span>
+    <div class="schedule-list"></div>
+    <button class="preset-btn">Tayyor jadvalni qo'llash</button>
+    <form class="add-form">
+      <input type="time" class="add-time" required>
+      <input type="text" class="add-text" placeholder="Vazifa nomi" required>
+      <button type="submit">Qo'shish</button>
+    </form>
+  </section>
+
+  <section class="screen" id="cat-ilm" data-category="ilm">
+    <button class="back-btn">← Orqaga</button>
+    <h1 class="cat-title">Ilm olish</h1>
+    <p class="cat-desc">Har kuni ozgina bo'lsa ham yangi bilim o'rganish, uzoq muddatda katta natija beradi.</p>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <span class="progress-label">0 / 0</span>
+    <div class="schedule-list"></div>
+    <button class="preset-btn">Tayyor jadvalni qo'llash</button>
+    <form class="add-form">
+      <input type="time" class="add-time" required>
+      <input type="text" class="add-text" placeholder="Vazifa nomi" required>
+      <button type="submit">Qo'shish</button>
+    </form>
+  </section>
+
+  <section class="screen" id="cat-chalg" data-category="chalg">
+    <button class="back-btn">← Orqaga</button>
+    <h1 class="cat-title">Chalg'ituvchilarni kamaytirish</h1>
+    <p class="cat-desc">Vaqtingizni o'g'irlaydigan odatlarni nazorat ostiga oling. Aniq qoidalar belgilang va ularga amal qiling.</p>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <span class="progress-label">0 / 0</span>
+    <div class="schedule-list"></div>
+    <button class="preset-btn">Tayyor jadvalni qo'llash</button>
+    <form class="add-form">
+      <input type="time" class="add-time" required>
+      <input type="text" class="add-text" placeholder="Vazifa nomi" required>
+      <button type="submit">Qo'shish</button>
+    </form>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
