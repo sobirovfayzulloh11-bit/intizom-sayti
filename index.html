@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c4ae7a7496674b6a8718665e7014e723"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
 <body>
   <div class="bg-glow"></div>
@@ -20,12 +21,38 @@
       <p id="notifyStatus" class="notify-status"></p>
     </header>
 
+    <div class="quote-box">
+      <p id="dailyQuote"></p>
+    </div>
+
+    <div class="streak-row">
+      <div class="streak-card">
+        <span class="streak-num" id="currentStreak">0</span>
+        <span class="streak-label">Joriy streak (kun)</span>
+      </div>
+      <div class="streak-card">
+        <span class="streak-num" id="bestStreak">0</span>
+        <span class="streak-label">Eng yaxshi natija</span>
+      </div>
+    </div>
+
     <div class="overall-tracker">
       <div class="tracker-head">
         <h2>Bugungi umumiy natija</h2>
         <span class="progress-label" id="overallLabel">0 / 0</span>
       </div>
       <div class="progress-bar"><div class="progress-fill" id="overallFill"></div></div>
+      <button id="shareBtn" class="share-btn">Natijani ulashish</button>
+    </div>
+
+    <div class="week-chart">
+      <h2>Oxirgi 7 kun</h2>
+      <div class="bars" id="weekBars"></div>
+    </div>
+
+    <div class="achievements">
+      <h2>Yutuqlar</h2>
+      <div class="badge-list" id="badgeList"></div>
     </div>
 
     <section class="cards">
@@ -57,7 +84,7 @@
   <section class="screen" id="cat-erta" data-category="erta">
     <button class="back-btn">← Orqaga</button>
     <h1 class="cat-title">Erta turish</h1>
-    <p class="cat-desc">Erta turish miya faoliyatini yaxshilaydi va kunni tartibli boshlashga yordam beradi. Islomiy an'analarda ham tongning barakali vaqt ekani ko'p ta'kidlangan — Payg'ambarimiz sollallohu alayhi vasallam ummatiga tongdagi ishlarga baraka tilab duo qilganlar. O'zingizga mos jadval tuzing yoki tayyor namunani qo'llang.</p>
+    <p class="cat-desc">Erta turish miya faoliyatini yaxshilaydi va kunni tartibli boshlashga yordam beradi. O'zingizga mos jadval tuzing yoki tayyor namunani qo'llang.</p>
     <div class="progress-bar"><div class="progress-fill"></div></div>
     <span class="progress-label">0 / 0</span>
     <div class="schedule-list"></div>
@@ -115,6 +142,5 @@
   </section>
 
   <script src="script.js"></script>
-<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c4ae7a7496674b6a8718665e7014e723"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

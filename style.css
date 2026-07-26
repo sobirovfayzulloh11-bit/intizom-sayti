@@ -141,3 +141,74 @@ footer { text-align:center; padding:30px 20px 10px; color:#4a4a5e; font-size:0.8
   font-size:0.78rem;
   color:#7877c6;
 }
+
+.quote-box {
+  max-width:600px; margin:20px auto 0; padding:0 20px;
+  text-align:center;
+}
+.quote-box p {
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:1.05rem; color:#c7c7dd; opacity:0.9;
+}
+
+.streak-row {
+  display:flex; gap:14px; max-width:560px; margin:24px auto 0; padding:0 20px;
+}
+.streak-card {
+  flex:1; background:rgba(255,255,255,0.03); backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.08); border-radius:14px;
+  padding:20px; text-align:center;
+}
+.streak-num {
+  display:block; font-family:'Playfair Display',serif; font-style:italic;
+  font-size:2.2rem; color:#ff9a8b; font-weight:400;
+}
+.streak-label {
+  display:block; font-size:0.78rem; color:#9c9cb5; margin-top:6px;
+}
+
+.share-btn {
+  display:block; width:100%; margin-top:16px; padding:10px;
+  background:rgba(120,119,198,0.15); border:1px solid rgba(120,119,198,0.4);
+  color:#c7c7ff; border-radius:10px; font-size:0.85rem; cursor:pointer;
+}
+
+.week-chart {
+  max-width:560px; margin:20px auto 0; padding:24px 20px;
+  background:rgba(255,255,255,0.03); backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.08); border-radius:16px;
+}
+.week-chart h2 { font-size:1rem; color:#f5f5fa; font-weight:600; margin-bottom:16px; }
+.bars {
+  display:flex; align-items:flex-end; gap:8px; height:100px;
+}
+.bar-col {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;
+}
+.bar-fill {
+  width:100%; background:linear-gradient(180deg,#ff9a8b,#7877c6);
+  border-radius:6px 6px 0 0; min-height:3px;
+}
+.bar-day {
+  font-size:0.7rem; color:#7c7c94; margin-top:6px;
+}
+
+.achievements {
+  max-width:560px; margin:20px auto 0; padding:24px 20px;
+}
+.achievements h2 { font-size:1rem; color:#f5f5fa; font-weight:600; margin-bottom:14px; }
+.badge-list { display:flex; flex-direction:column; gap:10px; }
+.badge {
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  border-radius:12px; border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.02);
+}
+.badge.unlocked {
+  border-color:rgba(255,154,139,0.4); background:rgba(255,154,139,0.06);
+}
+.badge-dot {
+  width:10px; height:10px; border-radius:50%; background:#3a3a4e; flex-shrink:0;
+}
+.badge.unlocked .badge-dot { background:#ff9a8b; }
+.badge-text { font-size:0.9rem; color:#9c9cb5; }
+.badge.unlocked .badge-text { color:#e8e8f0; }

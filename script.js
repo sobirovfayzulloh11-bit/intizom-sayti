@@ -208,3 +208,155 @@ function checkSchedules(){
 }
 
 setInterval(checkSchedules, 20000);
+
+// ==== KUNLIK ILHOM ====
+const QUOTES = [
+  "Kichik qadamlar, katta natijalar yaratadi.",
+  "Intizom — bugungi kunni ertangi men uchun sovg'a qilishdir.",
+  "Har kuni ozgina yaxshiroq bo'lish, uzoq muddatda buyuk o'zgarish beradi.",
+  "Boshlash qiyin, lekin davom etish g'alaba keltiradi.",
+  "Vaqtingizni himoya qiling — u qaytmaydigan boylik.",
+  "Odat — kelajagingizni quradigan g'isht.",
+  "Bugungi kichik harakat, ertangi katta natija.",
+  "O'zingizga bergan va'dangizni bajaring — bu ishonchning boshlanishi."
+];
+
+function dailyQuote(){
+  const day = Math.floor(Date.now() / 86400000);
+  return QUOTES[day % QUOTES.length];
+}
+
+const quoteEl = document.getElementById('dailyQuote');
+if(quoteEl) quoteEl.textContent = dailyQuote();
+
+// ==== GLOBAL LOG (streak va grafik uchun) ====
+function dateStr(offsetDays){
+  const d = new Date();
+  d.setDate(d.getDate() - offsetDays);
+  return d.toISOString().slice(0,10);
+}
+
+function loadLog(){
+  const raw = localStorage.getItem('intizom_log');
+  return raw ? JSON.parse(raw) : {};
+}
+
+function saveLog(log){
+  localStorage.setItem('intizom_log', JSON.stringify(log));
+}
+
+function updateTodayLog(done, total){
+  const log = loadLog();
+  log[dateStr(0)] = { done: done, total: total };
+  saveLog(log);
+  return log;
+}
+
+function computeStreak(log){
+  let streak = 0;
+  let i = 0;
+  while(true){
+    const key = dateStr(i);
+    if(log[key] && log[key].done > 0){
+      streak++;
+      i++;
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function computeBest(log, current){
+  const stored = parseInt(localStorage.getItem('intizom_best') || '0', 10);
+  const best = Math.max(stored, current);
+  localStorage.setItem('intizom_best', String(best));
+  return best;
+}
+
+function renderWeekChart(log){
+  const container = document.getElementById('weekBars');
+  if(!container) return;
+  container.innerHTML = '';
+  const days = ['Ya','Du','Se','Ch','Pa','Ju','Sh'];
+  for(let i = 6; i >= 0; i--){
+    const key = dateStr(i);
+    const entry = log[key];
+    const pct = entry && entry.total ? Math.round(entry.done / entry.total * 100) : 0;
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+    col.innerHTML =
+      '<div class="bar-fill" style="height:' + Math.max(pct,3) + '%"></div>' +
+      '<span class="bar-day">' + days[d.getDay()] + '</span>';
+    container.appendChild(col);
+  }
+}
+
+const ACHIEVEMENTS = [
+  { id:'first', label:"Birinchi qadam — birinchi vazifani bajarding", check: (log) => Object.values(log).reduce((a,e)=>a+e.done,0) >= 1 },
+  { id:'streak3', label:"Barqaror boshlanish — 3 kunlik streak", check: (log, streak) => streak >= 3 },
+  { id:'streak7', label:"Bir hafta intizom — 7 kunlik streak", check: (log, streak) => streak >= 7 },
+  { id:'done20', label:"Yigirmalik — jami 20 ta vazifa bajarildi", check: (log) => Object.values(log).reduce((a,e)=>a+e.done,0) >= 20 },
+  { id:'streak30', label:"Bir oylik yo'l — 30 kunlik streak", check: (log, streak) => streak >= 30 }
+];
+
+function renderAchievements(log, streak){
+  const list = document.getElementById('badgeList');
+  if(!list) return;
+  list.innerHTML = '';
+  ACHIEVEMENTS.forEach(function(a){
+    const unlocked = a.check(log, streak);
+    const div = document.createElement('div');
+    div.className = 'badge' + (unlocked ? ' unlocked' : '');
+    div.innerHTML = '<span class="badge-dot"></span><span class="badge-text">' + a.label + '</span>';
+    list.appendChild(div);
+  });
+}
+
+function refreshHomeStats(){
+  let total = 0, done = 0;
+  document.querySelectorAll('.screen[data-category]').forEach(function(screen){
+    const items = loadSchedule(screen.dataset.category);
+    total += items.length;
+    done += items.filter(i => i.done).length;
+  });
+
+  const log = updateTodayLog(done, total);
+  const streak = computeStreak(log);
+  const best = computeBest(log, streak);
+
+  const curEl = document.getElementById('currentStreak');
+  const bestEl = document.getElementById('bestStreak');
+  if(curEl) curEl.textContent = streak;
+  if(bestEl) bestEl.textContent = best;
+
+  renderWeekChart(log);
+  renderAchievements(log, streak);
+}
+
+const _origUpdateOverall = updateOverall;
+updateOverall = function(){
+  _origUpdateOverall();
+  refreshHomeStats();
+};
+
+// ==== ULASHISH ====
+const shareBtn = document.getElementById('shareBtn');
+if(shareBtn){
+  shareBtn.addEventListener('click', function(){
+    const label = document.getElementById('overallLabel').textContent;
+    const streak = document.getElementById('currentStreak').textContent;
+    const text = "Men Intizom saytida bugun " + label + " vazifani bajardim, joriy streak: " + streak + " kun! " + window.location.href;
+    if(navigator.share){
+      navigator.share({ title:'Intizom', text: text }).catch(function(){});
+    } else {
+      navigator.clipboard.writeText(text).then(function(){
+        alert('Natija nusxalandi, do\'stingizga yuborishingiz mumkin!');
+      });
+    }
+  });
+}
+
+refreshHomeStats();
