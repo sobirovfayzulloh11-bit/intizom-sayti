@@ -360,3 +360,60 @@ if(shareBtn){
 }
 
 refreshHomeStats();
+
+// ==== ZAXIRA (EXPORT/IMPORT) ====
+function collectAllData(){
+  const data = { schedules:{}, log: loadLog(), best: localStorage.getItem('intizom_best') || '0' };
+  ['erta','sport','ilm','chalg'].forEach(function(cat){
+    data.schedules[cat] = loadSchedule(cat);
+  });
+  return data;
+}
+
+function applyAllData(data){
+  if(data.schedules){
+    Object.keys(data.schedules).forEach(function(cat){
+      saveSchedule(cat, data.schedules[cat]);
+    });
+  }
+  if(data.log) saveLog(data.log);
+  if(data.best) localStorage.setItem('intizom_best', data.best);
+}
+
+const exportBtn = document.getElementById('exportBtn');
+if(exportBtn){
+  exportBtn.addEventListener('click', function(){
+    const data = collectAllData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'intizom-zaxira-' + dateStr(0) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+const importBtn = document.getElementById('importBtn');
+const importFile = document.getElementById('importFile');
+if(importBtn && importFile){
+  importBtn.addEventListener('click', function(){
+    importFile.click();
+  });
+  importFile.addEventListener('change', function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      try {
+        const data = JSON.parse(ev.target.result);
+        applyAllData(data);
+        alert('Zaxira muvaffaqiyatli tiklandi!');
+        location.reload();
+      } catch(err){
+        alert('Fayl noto\'g\'ri formatda. Faqat Intizom zaxira faylini tanlang.');
+      }
+    };
+    reader.readAsText(file);
+  });
+}

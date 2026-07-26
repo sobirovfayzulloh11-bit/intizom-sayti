@@ -218,3 +218,12 @@ footer { text-align:center; padding:30px 20px 10px; color:#4a4a5e; font-size:0.8
 }
 .about h2 { font-size:1rem; color:#f5f5fa; font-weight:600; margin-bottom:10px; }
 .about p { color:#9c9cb5; font-size:0.9rem; line-height:1.7; }
+
+.backup-row {
+  display:flex; gap:10px; margin-top:10px;
+}
+.backup-btn {
+  flex:1; padding:10px; background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.1); color:#9c9cb5;
+  border-radius:10px; font-size:0.8rem; cursor:pointer;
+}
