@@ -212,3 +212,9 @@ footer { text-align:center; padding:30px 20px 10px; color:#4a4a5e; font-size:0.8
 .badge.unlocked .badge-dot { background:#ff9a8b; }
 .badge-text { font-size:0.9rem; color:#9c9cb5; }
 .badge.unlocked .badge-text { color:#e8e8f0; }
+
+.about {
+  max-width:560px; margin:20px auto 0; padding:24px 20px; text-align:center;
+}
+.about h2 { font-size:1rem; color:#f5f5fa; font-weight:600; margin-bottom:10px; }
+.about p { color:#9c9cb5; font-size:0.9rem; line-height:1.7; }
