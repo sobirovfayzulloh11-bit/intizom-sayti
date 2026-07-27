@@ -533,3 +533,106 @@ window.addEventListener('load', function(){
     if(splash) splash.classList.add('hide');
   }, 1600);
 });
+
+// ==== AUTH ====
+const authModal = document.getElementById('authModal');
+const authForm = document.getElementById('authForm');
+const authTitle = document.getElementById('modalTitle');
+const authSubmit = document.getElementById('authSubmit');
+const authEmailField = document.getElementById('authEmail');
+const authError = document.getElementById('authError');
+const authStatus = document.getElementById('authStatus');
+const loginBtn = document.getElementById('loginBtn');
+const registerBtn = document.getElementById('registerBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const modalClose = document.getElementById('modalClose');
+
+let authMode = 'login';
+
+function openAuthModal(mode){
+  authMode = mode;
+  authError.textContent = '';
+  authForm.reset();
+  if(mode === 'login'){
+    authTitle.textContent = 'Kirish';
+    authSubmit.textContent = 'Kirish';
+    authEmailField.style.display = 'none';
+    authEmailField.required = false;
+  } else {
+    authTitle.textContent = 'Ro\'yxatdan o\'tish';
+    authSubmit.textContent = 'Ro\'yxatdan o\'tish';
+    authEmailField.style.display = 'block';
+    authEmailField.required = true;
+  }
+  authModal.style.display = 'flex';
+}
+
+if(loginBtn) loginBtn.addEventListener('click', function(){ openAuthModal('login'); });
+if(registerBtn) registerBtn.addEventListener('click', function(){ openAuthModal('register'); });
+if(modalClose) modalClose.addEventListener('click', function(){ authModal.style.display = 'none'; });
+if(authModal) authModal.addEventListener('click', function(e){ if(e.target === authModal) authModal.style.display = 'none'; });
+
+if(authForm){
+  authForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    authError.textContent = '';
+    const username = document.getElementById('authUsername').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const email = authEmailField.value.trim();
+
+    const endpoint = authMode === 'login' ? '/api/login' : '/api/register';
+    const payload = authMode === 'login'
+      ? { username, password }
+      : { username, email, password };
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if(!res.ok){
+        authError.textContent = data.error || 'Xatolik yuz berdi';
+        return;
+      }
+      if(authMode === 'register'){
+        authError.style.color = '#7ba05c';
+        authError.textContent = 'Muvaffaqiyatli ro\'yxatdan o\'tdingiz! Endi kiring.';
+        setTimeout(function(){ openAuthModal('login'); authError.style.color = ''; }, 1200);
+      } else {
+        authModal.style.display = 'none';
+        checkAuthStatus();
+      }
+    } catch(err){
+      authError.textContent = 'Server bilan bog\'lanishda xatolik';
+    }
+  });
+}
+
+if(logoutBtn){
+  logoutBtn.addEventListener('click', async function(){
+    await fetch('/api/logout', { method: 'POST' });
+    checkAuthStatus();
+  });
+}
+
+async function checkAuthStatus(){
+  try {
+    const res = await fetch('/api/me');
+    const data = await res.json();
+    if(data.loggedIn){
+      authStatus.textContent = 'Salom, ' + data.username;
+      loginBtn.style.display = 'none';
+      registerBtn.style.display = 'none';
+      logoutBtn.style.display = 'inline-block';
+    } else {
+      authStatus.textContent = '';
+      loginBtn.style.display = 'inline-block';
+      registerBtn.style.display = 'inline-block';
+      logoutBtn.style.display = 'none';
+    }
+  } catch(err){}
+}
+
+checkAuthStatus();

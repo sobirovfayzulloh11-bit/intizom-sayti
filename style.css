@@ -280,3 +280,46 @@ footer { text-align:center; padding:30px 20px 10px; color:var(--text-faint); fon
 .splash-text {
   margin-top: 20px;
 }
+
+/* ==== AUTH ==== */
+.auth-row {
+  display:flex; justify-content:center; gap:10px; margin-top:20px; flex-wrap:wrap;
+}
+.auth-status { color:var(--text-soft); font-size:0.85rem; align-self:center; }
+.auth-btn {
+  background:transparent; border:1px solid var(--border);
+  color:var(--text-soft); padding:8px 16px; border-radius:8px;
+  font-size:0.82rem; cursor:pointer; font-weight:600;
+}
+.auth-btn:hover { border-color:var(--border-strong); color:var(--text); }
+
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.6);
+  display:flex; align-items:center; justify-content:center;
+  z-index:1000; padding:20px;
+}
+.modal-box {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:14px; padding:30px 24px; max-width:360px; width:100%;
+  position:relative;
+}
+.modal-close {
+  position:absolute; top:14px; right:16px; background:none; border:none;
+  color:var(--text-faint); font-size:1.3rem; cursor:pointer;
+}
+.modal-box h2 {
+  font-family:'Playfair Display',serif; font-style:italic; font-weight:400;
+  font-size:1.5rem; color:var(--text); margin-bottom:20px; text-align:center;
+}
+#authForm { display:flex; flex-direction:column; gap:12px; }
+#authForm input {
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:8px; padding:11px 14px; color:var(--text); font-size:0.9rem;
+}
+#authForm button {
+  background:var(--accent); border:none; border-radius:8px;
+  padding:11px; color:#fff; font-weight:700; font-size:0.9rem; cursor:pointer; margin-top:6px;
+}
+.auth-error {
+  color:#e8756a; font-size:0.82rem; text-align:center; margin-top:12px; min-height:1em;
+}

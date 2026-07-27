@@ -28,6 +28,12 @@
       <span class="eyebrow">SHAXSIY RIVOJLANISH</span>
       <h1>Moon</h1>
       <p class="subtitle">Har kuni bir qadam oldinga</p>
+      <div class="auth-row">
+        <span id="authStatus" class="auth-status"></span>
+        <button id="loginBtn" class="auth-btn">Kirish</button>
+        <button id="registerBtn" class="auth-btn">Ro'yxatdan o'tish</button>
+        <button id="logoutBtn" class="auth-btn" style="display:none">Chiqish</button>
+      </div>
       <button id="notifyBtn" class="notify-btn">Bildirishnomalarni yoqish</button>
       <p id="notifyStatus" class="notify-status"></p>
     </header>
@@ -168,6 +174,19 @@
     </form>
   </section>
 
+  <div id="authModal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <button id="modalClose" class="modal-close">×</button>
+      <h2 id="modalTitle">Kirish</h2>
+      <form id="authForm">
+        <input type="text" id="authUsername" placeholder="Username" required>
+        <input type="email" id="authEmail" placeholder="Email" style="display:none">
+        <input type="password" id="authPassword" placeholder="Parol" required>
+        <button type="submit" id="authSubmit">Kirish</button>
+      </form>
+      <p id="authError" class="auth-error"></p>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
