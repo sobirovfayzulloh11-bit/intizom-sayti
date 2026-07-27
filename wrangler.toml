@@ -1,0 +1,13 @@
+name = "intizom-sayti"
+main = "worker.js"
+compatibility_date = "2026-07-27"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "."
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "moon-users"
+database_id = "1cb6a09d-69bf-4a93-9ec0-adf0570d4a9f"
