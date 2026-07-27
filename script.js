@@ -417,3 +417,119 @@ if(importBtn && importFile){
     reader.readAsText(file);
   });
 }
+
+// ==== KUNLIK CHALLENGE ====
+const CHALLENGES = [
+  "Bugun 5 daqiqa jim o'tirib, chuqur nafas oling.",
+  "Bugun birontasiga samimiy rahmat ayting.",
+  "Bugun telefonni 1 soatga chetga qo'ying.",
+  "Bugun ertami turish uchun alarm 30 daqiqaga erta qo'ying.",
+  "Bugun yangi bir so'z yoki fakt o'rganing.",
+  "Bugun 10 marta o'tirib-turish (squat) qiling.",
+  "Bugun kimdirga yordam bering, hech narsa evaziga.",
+  "Bugun ijobiy fikr bilan kunni yakunlang — kundalikka yozing.",
+  "Bugun sog'lom taomni tanlang, shirinlik o'rniga meva yeng.",
+  "Bugun 15 daqiqa piyoda yuring."
+];
+
+function todayChallenge(){
+  const day = Math.floor(Date.now() / 86400000);
+  return CHALLENGES[day % CHALLENGES.length];
+}
+
+function challengeKey(){
+  return 'intizom_challenge_' + dateStr(0);
+}
+
+const challengeText = document.getElementById('challengeText');
+const challengeBtn = document.getElementById('challengeBtn');
+
+if(challengeText && challengeBtn){
+  challengeText.textContent = todayChallenge();
+  const doneToday = localStorage.getItem(challengeKey()) === '1';
+  if(doneToday){
+    challengeBtn.textContent = 'Bajarildi ✓';
+    challengeBtn.classList.add('done');
+    challengeBtn.disabled = true;
+  }
+  challengeBtn.addEventListener('click', function(){
+    localStorage.setItem(challengeKey(), '1');
+    challengeBtn.textContent = 'Bajarildi ✓';
+    challengeBtn.classList.add('done');
+    challengeBtn.disabled = true;
+    fireConfetti();
+  });
+}
+
+// ==== CONFETTI ====
+function fireConfetti(){
+  const layer = document.getElementById('confettiLayer');
+  if(!layer) return;
+  const colors = ['#ff9a8b','#7877c6','#ffd166','#8bd3ff'];
+  for(let i = 0; i < 40; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const size = 6 + Math.random() * 6;
+    piece.style.width = size + 'px';
+    piece.style.height = (size * 0.4) + 'px';
+    piece.style.left = (Math.random() * 100) + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+    layer.appendChild(piece);
+    setTimeout(function(){ piece.remove(); }, 4000);
+  }
+}
+
+// Barcha vazifa bajarilganda confetti
+const _origUpdateOverallStats = updateOverall;
+updateOverall = function(){
+  _origUpdateOverallStats();
+  const label = document.getElementById('overallLabel');
+  if(label){
+    const parts = label.textContent.split(' / ');
+    const done = parseInt(parts[0], 10);
+    const total = parseInt(parts[1], 10);
+    if(total > 0 && done === total){
+      const key = 'intizom_confetti_' + dateStr(0);
+      if(!localStorage.getItem(key)){
+        localStorage.setItem(key, '1');
+        fireConfetti();
+      }
+    }
+  }
+};
+
+// ==== REVEAL ANIMATSIYA (scroll bilan asta-sekin ko'rinish) ====
+function initReveal(){
+  const targets = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){
+    targets.forEach(function(el){ el.classList.add('in-view'); });
+    return;
+  }
+  const observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  targets.forEach(function(el){ observer.observe(el); });
+}
+
+initReveal();
+
+// Kategoriya sahifasiga o'tganda ham reveal ishlashi uchun
+document.querySelectorAll('.card').forEach(function(card){
+  card.addEventListener('click', function(){
+    setTimeout(initReveal, 50);
+  });
+});
+
+// ==== SPLASH EKRANNI YASHIRISH ====
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    const splash = document.getElementById('splashScreen');
+    if(splash) splash.classList.add('hide');
+  }, 1600);
+});

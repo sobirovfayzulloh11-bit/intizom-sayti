@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Intizom — Har kuni bir qadam oldinga</title>
+  <title>Moon — Har kuni bir qadam oldinga</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
   <meta property="og:title" content="Intizom — Har kuni bir qadam oldinga">
   <meta property="og:description" content="Erta turish, sport, ilm olish va chalg'ituvchilarni kamaytirish uchun shaxsiy jadval va kunlik kuzatuv.">
   <meta property="og:type" content="website">
@@ -15,22 +15,34 @@
   <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c4ae7a7496674b6a8718665e7014e723"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
 <body>
-  <div class="bg-glow"></div>
+  <div id="splashScreen" class="splash">
+    <div class="starfield"></div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg" class="moon-photo" alt="Oy">
+    <p class="splash-text">MOON</p>
+  </div>
+    <div class="sky-bg"></div>
+  <div id="confettiLayer"></div>
 
   <section class="screen active" id="home">
-    <header>
+    <header class="reveal">
       <span class="eyebrow">SHAXSIY RIVOJLANISH</span>
-      <h1>Intizom</h1>
+      <h1>Moon</h1>
       <p class="subtitle">Har kuni bir qadam oldinga</p>
       <button id="notifyBtn" class="notify-btn">Bildirishnomalarni yoqish</button>
       <p id="notifyStatus" class="notify-status"></p>
     </header>
 
-    <div class="quote-box">
+    <div class="quote-box reveal">
       <p id="dailyQuote"></p>
     </div>
 
-    <div class="streak-row">
+    <div class="challenge-card reveal" id="challengeCard">
+      <span class="challenge-tag">Bugungi challenge</span>
+      <p id="challengeText"></p>
+      <button id="challengeBtn" class="challenge-btn">Bajardim</button>
+    </div>
+
+    <div class="streak-row reveal">
       <div class="streak-card">
         <span class="streak-num" id="currentStreak">0</span>
         <span class="streak-label">Joriy streak (kun)</span>
@@ -41,7 +53,7 @@
       </div>
     </div>
 
-    <div class="overall-tracker">
+    <div class="overall-tracker reveal">
       <div class="tracker-head">
         <h2>Bugungi umumiy natija</h2>
         <span class="progress-label" id="overallLabel">0 / 0</span>
@@ -55,40 +67,40 @@
       <input type="file" id="importFile" accept=".json" style="display:none">
     </div>
 
-    <div class="week-chart">
+    <div class="week-chart reveal">
       <h2>Oxirgi 7 kun</h2>
       <div class="bars" id="weekBars"></div>
     </div>
 
-    <div class="achievements">
+    <div class="achievements reveal">
       <h2>Yutuqlar</h2>
       <div class="badge-list" id="badgeList"></div>
     </div>
 
     <section class="cards">
-      <div class="card" data-target="cat-erta">
+      <div class="card card--erta reveal" data-target="cat-erta">
         <span class="card-index">01</span>
         <h2>Erta turish</h2>
         <p>Kuningizni tartibli boshlash uchun shaxsiy jadval tuzing.</p>
       </div>
-      <div class="card" data-target="cat-sport">
+      <div class="card card--sport reveal" data-target="cat-sport">
         <span class="card-index">02</span>
         <h2>Sport bilan shug'ullanish</h2>
         <p>Jismoniy faollik rejangizni tuzib, kuzatib boring.</p>
       </div>
-      <div class="card" data-target="cat-ilm">
+      <div class="card card--ilm reveal" data-target="cat-ilm">
         <span class="card-index">03</span>
         <h2>Ilm olish</h2>
         <p>Har kuni bilim orttirish uchun o'quv jadvali yarating.</p>
       </div>
-      <div class="card" data-target="cat-chalg">
+      <div class="card card--chalg reveal" data-target="cat-chalg">
         <span class="card-index">04</span>
         <h2>Chalg'ituvchilarni kamaytirish</h2>
         <p>Vaqtingizni himoya qiluvchi qoidalar belgilang.</p>
       </div>
     </section>
 
-    <section class="about">
+    <section class="about reveal">
       <h2>Intizom haqida</h2>
       <p>Intizom — kichik, ammo barqaror qadamlar orqali katta o'zgarishlarga erishish uchun yaratilgan shaxsiy hamroh. Har kuni bir necha daqiqa vaqt ajratib, o'z maqsadlaringizni kuzatib boring — natija asta-sekin, ammo ishonchli ravishda ko'rina boshlaydi.</p>
     </section>
