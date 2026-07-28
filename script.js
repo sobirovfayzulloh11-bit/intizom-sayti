@@ -642,3 +642,67 @@ async function checkAuthStatus(){
 
 authGate.style.transition = 'opacity 0.5s ease';
 checkAuthStatus();
+
+// ==== SERVER BILAN SINXRONLASH ====
+async function loadServerData(){
+  try {
+    const res = await fetch('/api/data');
+    if(!res.ok) return;
+    const result = await res.json();
+    if(result.data && Object.keys(result.data).length > 0){
+      applyAllData(result.data);
+    }
+  } catch(err){}
+}
+
+async function syncToServer(){
+  try {
+    const data = collectAllData();
+    await fetch('/api/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch(err){}
+}
+
+const _origCloseAuthGate = closeAuthGate;
+closeAuthGate = async function(username){
+  await loadServerData();
+  _origCloseAuthGate(username);
+  refreshHomeStats();
+  syncToServer();
+};
+
+const _origCheckAuthStatus = checkAuthStatus;
+checkAuthStatus = async function(){
+  try {
+    const res = await fetch('/api/me');
+    const data = await res.json();
+    if(data.loggedIn){
+      await loadServerData();
+      authGate.style.display = 'none';
+      homeScreen.classList.add('active');
+      if(authStatus) authStatus.textContent = 'Salom, ' + data.username;
+      if(logoutBtn) logoutBtn.style.display = 'inline-block';
+      refreshHomeStats();
+    } else {
+      authGate.style.display = 'flex';
+      homeScreen.classList.remove('active');
+    }
+  } catch(err){}
+};
+
+const _origUpdateOverallSync = updateOverall;
+updateOverall = function(){
+  _origUpdateOverallSync();
+  syncToServer();
+};
+
+if(challengeBtn){
+  challengeBtn.addEventListener('click', function(){
+    setTimeout(syncToServer, 100);
+  });
+}
+
+checkAuthStatus();

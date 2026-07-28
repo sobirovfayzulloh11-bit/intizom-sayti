@@ -96,6 +96,39 @@ export default {
       return new Response(JSON.stringify({ success: true }), { headers });
     }
 
+    // ==== FOYDALANUVCHI MA'LUMOTLARINI SAQLASH ====
+    if (url.pathname === '/api/data' && request.method === 'GET') {
+      const cookie = request.headers.get('Cookie') || '';
+      const match = cookie.match(/session=([a-f0-9]+)/);
+
+      const session = await env.DB.prepare(
+        'SELECT user_id FROM sessions WHERE token = ?'
+      ).bind(match[1]).first();
+
+      const row = await env.DB.prepare(
+        'SELECT data FROM user_data WHERE user_id = ?'
+      ).bind(session.user_id).first();
+
+      return jsonResponse({ data: row ? JSON.parse(row.data) : {} });
+    }
+
+    if (url.pathname === '/api/data' && request.method === 'POST') {
+      const cookie = request.headers.get('Cookie') || '';
+      const match = cookie.match(/session=([a-f0-9]+)/);
+
+      const session = await env.DB.prepare(
+        'SELECT user_id FROM sessions WHERE token = ?'
+      ).bind(match[1]).first();
+
+      const body = await request.json().catch(() => null);
+
+      await env.DB.prepare(
+        'INSERT INTO user_data (user_id, data, updated_at) VALUES (?, ?, datetime("now")) ON CONFLICT(user_id) DO UPDATE SET data = excluded.data, updated_at = excluded.updated_at'
+      ).bind(session.user_id, JSON.stringify(body)).run();
+
+      return jsonResponse({ success: true });
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
