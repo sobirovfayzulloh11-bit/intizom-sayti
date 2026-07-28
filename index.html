@@ -49,6 +49,7 @@
       <div class="auth-row">
         <span id="authStatus" class="auth-status"></span>
         <button id="logoutBtn" class="auth-btn" style="display:none">Chiqish</button>
+        <button id="feedBtn" class="auth-btn">Lenta</button>
       </div>
             <button id="notifyBtn" class="notify-btn">Bildirishnomalarni yoqish</button>
       <p id="notifyStatus" class="notify-status"></p>
@@ -190,6 +191,19 @@
     </form>
   </section>
 
-    <script src="script.js"></script>
+    <section class="screen" id="feed">
+    <button class="back-btn" id="feedBack">â Orqaga</button>
+    <h1 class="cat-title">Lenta</h1>
+    <div class="post-form-box">
+      <input type="file" id="postImageInput" accept="image/*" style="display:none">
+      <button id="postImageBtn" class="preset-btn">Rasm tanlash</button>
+      <img id="postPreview" style="display:none;max-width:100%;border-radius:12px;margin:12px 0;">
+      <textarea id="postCaption" placeholder="Izoh yozing..." class="post-caption"></textarea>
+      <button id="postSubmit" class="challenge-btn">Ulashish</button>
+    </div>
+    <div id="feedList" class="feed-list"></div>
+  </section>
+
+  <script src="script.js"></script>
 </body>
 </html>

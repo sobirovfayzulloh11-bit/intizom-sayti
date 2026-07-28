@@ -129,6 +129,46 @@ export default {
       return jsonResponse({ success: true });
     }
 
+    // ==== PROFIL ====
+    if (url.pathname === '/api/profile' && request.method === 'GET') {
+      const cookie = request.headers.get('Cookie') || '';
+      const match = cookie.match(/session=([a-f0-9]+)/);
+      const session = await env.DB.prepare('SELECT user_id FROM sessions WHERE token = ?').bind(match[1]).first();
+      const profile = await env.DB.prepare('SELECT avatar, bio FROM profiles WHERE user_id = ?').bind(session.user_id).first();
+      return jsonResponse({ avatar: profile ? profile.avatar : null, bio: profile ? profile.bio : '' });
+    }
+
+    if (url.pathname === '/api/profile' && request.method === 'POST') {
+      const cookie = request.headers.get('Cookie') || '';
+      const match = cookie.match(/session=([a-f0-9]+)/);
+      const session = await env.DB.prepare('SELECT user_id FROM sessions WHERE token = ?').bind(match[1]).first();
+      const body = await request.json().catch(() => null);
+      await env.DB.prepare(
+        'INSERT INTO profiles (user_id, avatar, bio) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET avatar = excluded.avatar, bio = excluded.bio'
+      ).bind(session.user_id, body.avatar || null, body.bio || '').run();
+      return jsonResponse({ success: true });
+    }
+
+    // ==== POSTLAR (LENTA) ====
+    if (url.pathname === '/api/posts' && request.method === 'GET') {
+      const { results } = await env.DB.prepare(
+        'SELECT posts.id, posts.image, posts.caption, posts.created_at, users.username, profiles.avatar FROM posts JOIN users ON posts.user_id = users.id LEFT JOIN profiles ON profiles.user_id = users.id ORDER BY posts.id DESC LIMIT 50'
+      ).all();
+      return jsonResponse({ posts: results });
+    }
+
+    if (url.pathname === '/api/posts' && request.method === 'POST') {
+      const cookie = request.headers.get('Cookie') || '';
+      const match = cookie.match(/session=([a-f0-9]+)/);
+      const session = await env.DB.prepare('SELECT user_id FROM sessions WHERE token = ?').bind(match[1]).first();
+      const body = await request.json().catch(() => null);
+      if (body.image.length > 900000) return jsonResponse({ error: 'Rasm juda katta' }, 400);
+      await env.DB.prepare(
+        'INSERT INTO posts (user_id, image, caption) VALUES (?, ?, ?)'
+      ).bind(session.user_id, body.image, body.caption || '').run();
+      return jsonResponse({ success: true });
+    }
+
     return env.ASSETS.fetch(request);
   }
 };

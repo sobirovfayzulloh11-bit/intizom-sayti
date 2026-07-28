@@ -706,3 +706,119 @@ if(challengeBtn){
 }
 
 checkAuthStatus();
+
+// ==== LENTA (FEED) ====
+const feedBtn = document.getElementById('feedBtn');
+const feedBack = document.getElementById('feedBack');
+const feedScreen = document.getElementById('feed');
+const feedList = document.getElementById('feedList');
+const postImageBtn = document.getElementById('postImageBtn');
+const postImageInput = document.getElementById('postImageInput');
+const postPreview = document.getElementById('postPreview');
+const postCaption = document.getElementById('postCaption');
+const postSubmit = document.getElementById('postSubmit');
+
+let selectedImageBase64 = null;
+
+function resizeImage(file, maxSize){
+  return new Promise(function(resolve){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.onload = function(){
+        let w = img.width, h = img.height;
+        if(w > h && w > maxSize){ h = h * maxSize / w; w = maxSize; }
+        else if(h > maxSize){ w = w * maxSize / h; h = maxSize; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+if(feedBtn) feedBtn.addEventListener('click', async function(){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  feedScreen.classList.add('active');
+  window.scrollTo(0,0);
+  await loadFeed();
+});
+
+if(feedBack) feedBack.addEventListener('click', function(){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  window.scrollTo(0,0);
+});
+
+if(postImageBtn) postImageBtn.addEventListener('click', function(){
+  postImageInput.click();
+});
+
+if(postImageInput) postImageInput.addEventListener('change', async function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  selectedImageBase64 = await resizeImage(file, 800);
+  postPreview.src = selectedImageBase64;
+  postPreview.style.display = 'block';
+});
+
+if(postSubmit) postSubmit.addEventListener('click', async function(){
+  if(!selectedImageBase64){
+    alert('Iltimos, rasm tanlang');
+    return;
+  }
+  postSubmit.disabled = true;
+  postSubmit.textContent = 'Yuklanmoqda...';
+  try {
+    const res = await fetch('/api/posts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: selectedImageBase64, caption: postCaption.value.trim() })
+    });
+    const data = await res.json();
+    if(!res.ok){
+      alert(data.error || 'Xatolik yuz berdi');
+    } else {
+      selectedImageBase64 = null;
+      postPreview.style.display = 'none';
+      postCaption.value = '';
+      await loadFeed();
+    }
+  } catch(err){
+    alert('Server bilan boglanishda xatolik');
+  }
+  postSubmit.disabled = false;
+  postSubmit.textContent = 'Ulashish';
+});
+
+async function loadFeed(){
+  feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Yuklanmoqda...</p>';
+  try {
+    const res = await fetch('/api/posts');
+    const data = await res.json();
+    feedList.innerHTML = '';
+    if(!data.posts || data.posts.length === 0){
+      feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Hali postlar yoq</p>';
+      return;
+    }
+    data.posts.forEach(function(post){
+      const div = document.createElement('div');
+      div.className = 'feed-post';
+      const avatarSrc = post.avatar || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"%3E%3Ccircle cx="20" cy="20" r="20" fill="%231a1a1e"/%3E%3C/svg%3E';
+      div.innerHTML =
+        '<div class="feed-post-head">' +
+          '<img class="feed-avatar" src="' + avatarSrc + '">' +
+          '<div><div class="feed-username">' + post.username + '</div>' +
+          '<div class="feed-time">' + post.created_at + '</div></div>' +
+        '</div>' +
+        '<img class="feed-image" src="' + post.image + '">' +
+        (post.caption ? '<div class="feed-caption">' + post.caption + '</div>' : '');
+      feedList.appendChild(div);
+    });
+  } catch(err){
+    feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Xatolik yuz berdi</p>';
+  }
+}
