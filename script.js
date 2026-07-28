@@ -534,43 +534,42 @@ window.addEventListener('load', function(){
   }, 1600);
 });
 
-// ==== AUTH ====
-const authModal = document.getElementById('authModal');
+
+// ==== AUTH GATE ====
+const authGate = document.getElementById('authGate');
+const gateTabLogin = document.getElementById('gateTabLogin');
+const gateTabRegister = document.getElementById('gateTabRegister');
 const authForm = document.getElementById('authForm');
-const authTitle = document.getElementById('modalTitle');
 const authSubmit = document.getElementById('authSubmit');
 const authEmailField = document.getElementById('authEmail');
 const authError = document.getElementById('authError');
 const authStatus = document.getElementById('authStatus');
-const loginBtn = document.getElementById('loginBtn');
-const registerBtn = document.getElementById('registerBtn');
 const logoutBtn = document.getElementById('logoutBtn');
-const modalClose = document.getElementById('modalClose');
+const homeScreen = document.getElementById('home');
 
 let authMode = 'login';
 
-function openAuthModal(mode){
+function setGateMode(mode){
   authMode = mode;
   authError.textContent = '';
   authForm.reset();
   if(mode === 'login'){
-    authTitle.textContent = 'Kirish';
+    gateTabLogin.classList.add('active');
+    gateTabRegister.classList.remove('active');
     authSubmit.textContent = 'Kirish';
     authEmailField.style.display = 'none';
     authEmailField.required = false;
   } else {
-    authTitle.textContent = 'Ro\'yxatdan o\'tish';
+    gateTabRegister.classList.add('active');
+    gateTabLogin.classList.remove('active');
     authSubmit.textContent = 'Ro\'yxatdan o\'tish';
     authEmailField.style.display = 'block';
     authEmailField.required = true;
   }
-  authModal.style.display = 'flex';
 }
 
-if(loginBtn) loginBtn.addEventListener('click', function(){ openAuthModal('login'); });
-if(registerBtn) registerBtn.addEventListener('click', function(){ openAuthModal('register'); });
-if(modalClose) modalClose.addEventListener('click', function(){ authModal.style.display = 'none'; });
-if(authModal) authModal.addEventListener('click', function(e){ if(e.target === authModal) authModal.style.display = 'none'; });
+if(gateTabLogin) gateTabLogin.addEventListener('click', function(){ setGateMode('login'); });
+if(gateTabRegister) gateTabRegister.addEventListener('click', function(){ setGateMode('register'); });
 
 if(authForm){
   authForm.addEventListener('submit', async function(e){
@@ -598,11 +597,10 @@ if(authForm){
       }
       if(authMode === 'register'){
         authError.style.color = '#7ba05c';
-        authError.textContent = 'Muvaffaqiyatli ro\'yxatdan o\'tdingiz! Endi kiring.';
-        setTimeout(function(){ openAuthModal('login'); authError.style.color = ''; }, 1200);
+        authError.textContent = 'Muvaffaqiyatli! Endi kiring.';
+        setTimeout(function(){ setGateMode('login'); authError.style.color = ''; }, 1200);
       } else {
-        authModal.style.display = 'none';
-        checkAuthStatus();
+        closeAuthGate(data.username);
       }
     } catch(err){
       authError.textContent = 'Server bilan bog\'lanishda xatolik';
@@ -610,10 +608,19 @@ if(authForm){
   });
 }
 
+function closeAuthGate(username){
+  authGate.style.opacity = '0';
+  authGate.style.pointerEvents = 'none';
+  setTimeout(function(){ authGate.style.display = 'none'; }, 500);
+  homeScreen.classList.add('active');
+  if(authStatus) authStatus.textContent = 'Salom, ' + username;
+  if(logoutBtn) logoutBtn.style.display = 'inline-block';
+}
+
 if(logoutBtn){
   logoutBtn.addEventListener('click', async function(){
     await fetch('/api/logout', { method: 'POST' });
-    checkAuthStatus();
+    location.reload();
   });
 }
 
@@ -622,17 +629,16 @@ async function checkAuthStatus(){
     const res = await fetch('/api/me');
     const data = await res.json();
     if(data.loggedIn){
-      authStatus.textContent = 'Salom, ' + data.username;
-      loginBtn.style.display = 'none';
-      registerBtn.style.display = 'none';
-      logoutBtn.style.display = 'inline-block';
+      authGate.style.display = 'none';
+      homeScreen.classList.add('active');
+      if(authStatus) authStatus.textContent = 'Salom, ' + data.username;
+      if(logoutBtn) logoutBtn.style.display = 'inline-block';
     } else {
-      authStatus.textContent = '';
-      loginBtn.style.display = 'inline-block';
-      registerBtn.style.display = 'inline-block';
-      logoutBtn.style.display = 'none';
+      authGate.style.display = 'flex';
+      homeScreen.classList.remove('active');
     }
   } catch(err){}
 }
 
+authGate.style.transition = 'opacity 0.5s ease';
 checkAuthStatus();

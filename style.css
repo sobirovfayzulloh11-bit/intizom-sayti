@@ -323,3 +323,65 @@ footer { text-align:center; padding:30px 20px 10px; color:var(--text-faint); fon
 .auth-error {
   color:#e8756a; font-size:0.82rem; text-align:center; margin-top:12px; min-height:1em;
 }
+
+/* ==== AUTH GATE (Instagram uslubi) ==== */
+.auth-gate {
+  position:fixed; inset:0; z-index:500;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.gate-bg {
+  position:absolute; inset:0;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg');
+  background-size: cover; background-position: center;
+  filter: blur(2px) brightness(0.5);
+  transform: scale(1.1);
+}
+.gate-overlay {
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(10,10,11,0.5) 0%, rgba(10,10,11,0.85) 70%, rgba(10,10,11,0.97) 100%);
+}
+.gate-box {
+  position:relative; z-index:1;
+  width:100%; max-width:360px; padding:0 24px;
+  display:flex; flex-direction:column; align-items:center;
+}
+.gate-title {
+  font-family:'Playfair Display',serif; font-style:italic; font-weight:400;
+  font-size:2.6rem; color:#f4f1ea; letter-spacing:2px; margin-bottom:30px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+.gate-tabs {
+  display:flex; gap:4px; margin-bottom:22px;
+  background:rgba(255,255,255,0.06); border-radius:10px; padding:4px; width:100%;
+}
+.gate-tab {
+  flex:1; background:transparent; border:none; padding:10px;
+  color:var(--text-soft); font-size:0.85rem; font-weight:600;
+  border-radius:8px; cursor:pointer;
+}
+.gate-tab.active { background:var(--accent); color:#fff; }
+
+#authGate #authForm { width:100%; display:flex; flex-direction:column; gap:12px; }
+#authGate #authForm input {
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15);
+  border-radius:8px; padding:13px 14px; color:#fff; font-size:0.92rem;
+}
+#authGate #authForm input::placeholder { color:rgba(255,255,255,0.4); }
+#authGate #authForm button {
+  background:var(--accent); border:none; border-radius:8px;
+  padding:13px; color:#fff; font-weight:700; font-size:0.92rem; cursor:pointer; margin-top:6px;
+}
+#authGate .auth-error {
+  color:#ff9a8b; font-size:0.82rem; text-align:center; margin-top:14px; min-height:1em;
+}
+
+.auth-row {
+  display:flex; justify-content:center; gap:10px; margin-top:20px;
+}
+.auth-status { color:var(--text-soft); font-size:0.85rem; align-self:center; }
+.auth-btn {
+  background:transparent; border:1px solid var(--border);
+  color:var(--text-soft); padding:8px 16px; border-radius:8px;
+  font-size:0.82rem; cursor:pointer; font-weight:600;
+}
