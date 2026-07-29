@@ -445,3 +445,27 @@ footer { text-align:center; padding:30px 20px 10px; color:var(--text-faint); fon
   width:100%; aspect-ratio:1; object-fit:cover; border-radius:4px; cursor:pointer;
 }
 .feed-username-link { cursor:pointer; }
+
+/* ==== BOTTOM NAVIGATION (Instagram uslubi) ==== */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:900;
+  display:flex; justify-content:space-around; align-items:center;
+  height:58px; background:rgba(10,10,11,0.92);
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+}
+.nav-btn {
+  background:none; border:none; color:var(--text-faint);
+  width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; border-radius:50%;
+}
+.nav-btn svg { width:24px; height:24px; }
+.nav-btn.active { color:var(--text); }
+.nav-avatar {
+  width:26px; height:26px; border-radius:50%; object-fit:cover;
+  border:1.5px solid var(--text-faint);
+}
+.nav-btn.active .nav-avatar { border-color:var(--accent); }
+
+/* Kontent pastki panel ostida qolib ketmasligi uchun bo'sh joy */
+.screen { padding-bottom:80px; }

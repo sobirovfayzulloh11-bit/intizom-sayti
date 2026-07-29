@@ -952,3 +952,52 @@ loadFeed = async function(){
     });
   });
 };
+
+// ==== BOTTOM NAVIGATION ====
+const navBtns = document.querySelectorAll('.nav-btn');
+const navAvatar = document.getElementById('navAvatar');
+
+function setActiveNav(target){
+  navBtns.forEach(function(btn){
+    btn.classList.toggle('active', btn.dataset.nav === target);
+  });
+}
+
+navBtns.forEach(function(btn){
+  btn.addEventListener('click', async function(){
+    const target = btn.dataset.nav;
+    setActiveNav(target);
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+    if(target === 'home'){
+      document.getElementById('home').classList.add('active');
+    } else if(target === 'feed'){
+      document.getElementById('feed').classList.add('active');
+      await loadFeed();
+    } else if(target === 'profilePage'){
+      await loadMyProfile();
+      setActiveNav('profilePage');
+    }
+    window.scrollTo(0,0);
+  });
+});
+
+async function updateNavAvatar(){
+  try {
+    const res = await fetch('/api/profile');
+    const data = await res.json();
+    if(data.avatar) navAvatar.src = data.avatar;
+  } catch(err){}
+}
+
+const _origCloseAuthGateNav = closeAuthGate;
+closeAuthGate = async function(username){
+  await _origCloseAuthGateNav(username);
+  updateNavAvatar();
+};
+
+const _origCheckAuthStatusNav = checkAuthStatus;
+checkAuthStatus = async function(){
+  await _origCheckAuthStatusNav();
+  updateNavAvatar();
+};
