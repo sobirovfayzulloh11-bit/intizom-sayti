@@ -1089,6 +1089,7 @@ async function setupPostInteractions(container, postId){
   const commentForm = container.querySelector('.comment-form');
 
   likeBtn.addEventListener('click', async function(){
+    alert('Tugma bosildi, postId=' + postId);
     try {
       const res = await fetch('/api/like', {
         method: 'POST',
