@@ -469,3 +469,29 @@ footer { text-align:center; padding:30px 20px 10px; color:var(--text-faint); fon
 
 /* Kontent pastki panel ostida qolib ketmasligi uchun bo'sh joy */
 .screen { padding-bottom:80px; }
+
+/* ==== LAYK VA IZOH ==== */
+.feed-actions {
+  display:flex; align-items:center; gap:16px; padding:10px 16px;
+}
+.like-btn {
+  background:none; border:none; cursor:pointer; padding:0;
+  display:flex; align-items:center; gap:6px; color:var(--text-soft); font-size:0.85rem;
+}
+.like-btn svg { width:22px; height:22px; stroke:var(--text-soft); fill:none; }
+.like-btn.liked svg { stroke:#e0566a; fill:#e0566a; }
+.comment-toggle-btn {
+  background:none; border:none; cursor:pointer; color:var(--text-soft); font-size:0.85rem;
+}
+.comments-box { padding:0 16px 14px; }
+.comment-item { font-size:0.85rem; color:var(--text-soft); margin-bottom:6px; }
+.comment-item b { color:var(--text); }
+.comment-form { display:flex; gap:8px; margin-top:8px; }
+.comment-form input {
+  flex:1; background:var(--surface-2); border:1px solid var(--border);
+  border-radius:8px; padding:8px 12px; color:var(--text); font-size:0.85rem;
+}
+.comment-form button {
+  background:var(--accent); border:none; border-radius:8px;
+  padding:8px 14px; color:#fff; font-weight:600; font-size:0.82rem; cursor:pointer;
+}

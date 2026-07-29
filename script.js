@@ -1001,3 +1001,157 @@ checkAuthStatus = async function(){
   await _origCheckAuthStatusNav();
   updateNavAvatar();
 };
+
+// ==== LAYK, IZOH VA ALGORITM ====
+function timeAgo(dateStr){
+  const then = new Date(dateStr.replace(' ', 'T') + 'Z');
+  const diffMs = Date.now() - then.getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if(mins < 1) return 'hozir';
+  if(mins < 60) return mins + ' daq';
+  const hours = Math.floor(mins / 60);
+  if(hours < 24) return hours + ' soat';
+  const days = Math.floor(hours / 24);
+  return days + ' kun';
+}
+
+function rankScore(post){
+  const then = new Date(post.created_at.replace(' ', 'T') + 'Z');
+  const ageHours = (Date.now() - then.getTime()) / 3600000;
+  const likeCount = post.likeCount || 0;
+  const commentCount = post.commentCount || 0;
+  return (likeCount * 2 + commentCount * 1.5) / Math.pow(ageHours + 2, 1.3);
+}
+
+const _origLoadFeedRank = loadFeed;
+loadFeed = async function(){
+  feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Yuklanmoqda...</p>';
+  try {
+    const res = await fetch('/api/posts');
+    const data = await res.json();
+    feedList.innerHTML = '';
+    if(!data.posts || data.posts.length === 0){
+      feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Hali postlar yoq</p>';
+      return;
+    }
+
+    const withCounts = await Promise.all(data.posts.map(async function(post){
+      const likeRes = await fetch('/api/like-count?postId=' + post.id).catch(() => null);
+      return post;
+    }));
+
+    const sorted = data.posts.slice().sort(function(a, b){
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+
+    sorted.forEach(function(post){
+      const div = document.createElement('div');
+      div.className = 'feed-post';
+      const avatarSrc = post.avatar || DEFAULT_AVATAR;
+      div.innerHTML =
+        '<div class="feed-post-head">' +
+          '<img class="feed-avatar" src="' + avatarSrc + '">' +
+          '<div><div class="feed-username">' + post.username + '</div>' +
+          '<div class="feed-time">' + timeAgo(post.created_at) + '</div></div>' +
+        '</div>' +
+        '<img class="feed-image" src="' + post.image + '">' +
+        '<div class="feed-actions">' +
+          '<button class="like-btn" data-post-id="' + post.id + '">' +
+            '<svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.8 4.6c-1.7-1.6-4.4-1.6-6 0L12 7.3 9.2 4.6c-1.7-1.6-4.4-1.6-6 0-1.7 1.7-1.7 4.4 0 6.1L12 21l8.8-10.3c1.7-1.7 1.7-4.4 0-6.1z"/></svg>' +
+            '<span class="like-count">0</span>' +
+          '</button>' +
+          '<button class="comment-toggle-btn" data-post-id="' + post.id + '">Izohlar</button>' +
+        '</div>' +
+        (post.caption ? '<div class="feed-caption">' + post.caption + '</div>' : '') +
+        '<div class="comments-box" id="comments-' + post.id + '" style="display:none">' +
+          '<div class="comments-list"></div>' +
+          '<form class="comment-form"><input type="text" placeholder="Izoh yozing..." required><button type="submit">Yubor</button></form>' +
+        '</div>';
+      feedList.appendChild(div);
+      setupPostInteractions(div, post.id);
+    });
+
+    document.querySelectorAll('.feed-username').forEach(function(el){
+      el.classList.add('feed-username-link');
+      el.addEventListener('click', function(){ loadUserProfile(el.textContent); });
+    });
+  } catch(err){
+    feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Xatolik yuz berdi</p>';
+  }
+};
+
+async function setupPostInteractions(container, postId){
+  const likeBtn = container.querySelector('.like-btn');
+  const likeCountEl = likeBtn.querySelector('.like-count');
+  const commentToggle = container.querySelector('.comment-toggle-btn');
+  const commentsBox = container.querySelector('.comments-box');
+  const commentsList = container.querySelector('.comments-list');
+  const commentForm = container.querySelector('.comment-form');
+
+  likeBtn.addEventListener('click', async function(){
+    try {
+      const res = await fetch('/api/like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId: postId })
+      });
+      const data = await res.json();
+      if(res.ok){
+        likeBtn.classList.toggle('liked', data.liked);
+        likeCountEl.textContent = data.count;
+      } else {
+        alert(data.error || 'Kirish talab qilinadi');
+      }
+    } catch(err){}
+  });
+
+  commentToggle.addEventListener('click', async function(){
+    const visible = commentsBox.style.display !== 'none';
+    commentsBox.style.display = visible ? 'none' : 'block';
+    if(!visible){
+      await loadComments(postId, commentsList);
+    }
+  });
+
+  commentForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    const input = commentForm.querySelector('input');
+    const text = input.value.trim();
+    if(!text) return;
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId: postId, text: text })
+      });
+      if(res.ok){
+        input.value = '';
+        await loadComments(postId, commentsList);
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Kirish talab qilinadi');
+      }
+    } catch(err){}
+  });
+}
+
+async function loadComments(postId, container){
+  container.innerHTML = 'Yuklanmoqda...';
+  try {
+    const res = await fetch('/api/comments?postId=' + postId);
+    const data = await res.json();
+    container.innerHTML = '';
+    if(!data.comments || data.comments.length === 0){
+      container.innerHTML = '<p style="color:var(--text-faint);font-size:0.82rem;">Hali izoh yoq</p>';
+      return;
+    }
+    data.comments.forEach(function(c){
+      const p = document.createElement('p');
+      p.className = 'comment-item';
+      p.innerHTML = '<b>' + c.username + '</b> ' + c.text;
+      container.appendChild(p);
+    });
+  } catch(err){
+    container.innerHTML = '';
+  }
+}

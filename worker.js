@@ -183,6 +183,40 @@ export default {
       return jsonResponse({ success: true });
     }
 
+    // ==== LAYK ====
+    if (url.pathname === '/api/like' && request.method === 'POST') {
+      const cookie = request.headers.get('Cookie') || '';
+      const match = cookie.match(/session=([a-f0-9]+)/);
+      const session = await env.DB.prepare('SELECT user_id FROM sessions WHERE token = ?').bind(match[1]).first();
+      const body = await request.json().catch(() => null);
+
+      const existing = await env.DB.prepare('SELECT id FROM likes WHERE post_id = ? AND user_id = ?').bind(body.postId, session.user_id).first();
+      if (existing) {
+        await env.DB.prepare('DELETE FROM likes WHERE post_id = ? AND user_id = ?').bind(body.postId, session.user_id).run();
+      } else {
+        await env.DB.prepare('INSERT INTO likes (post_id, user_id) VALUES (?, ?)').bind(body.postId, session.user_id).run();
+      }
+      const count = await env.DB.prepare('SELECT COUNT(*) as c FROM likes WHERE post_id = ?').bind(body.postId).first();
+    }
+
+    // ==== IZOHLAR ====
+    if (url.pathname === '/api/comments' && request.method === 'GET') {
+      const postId = url.searchParams.get('postId');
+      const { results } = await env.DB.prepare(
+        'SELECT comments.id, comments.text, comments.created_at, users.username FROM comments JOIN users ON comments.user_id = users.id WHERE post_id = ? ORDER BY comments.id ASC'
+      ).bind(postId).all();
+      return jsonResponse({ comments: results });
+    }
+
+    if (url.pathname === '/api/comments' && request.method === 'POST') {
+      const cookie = request.headers.get('Cookie') || '';
+      const match = cookie.match(/session=([a-f0-9]+)/);
+      const session = await env.DB.prepare('SELECT user_id FROM sessions WHERE token = ?').bind(match[1]).first();
+      const body = await request.json().catch(() => null);
+      await env.DB.prepare('INSERT INTO comments (post_id, user_id, text) VALUES (?, ?, ?)').bind(body.postId, session.user_id, body.text.trim()).run();
+      return jsonResponse({ success: true });
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
