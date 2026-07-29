@@ -1097,6 +1097,7 @@ async function setupPostInteractions(container, postId){
         body: JSON.stringify({ postId: postId })
       });
       const data = await res.json();
+      alert('Status: ' + res.status + ' Data: ' + JSON.stringify(data));
       if(res.ok){
         likeBtn.classList.toggle('liked', data.liked);
         likeCountEl.textContent = data.count;
