@@ -133,9 +133,19 @@ export default {
     if (url.pathname === '/api/profile' && request.method === 'GET') {
       const cookie = request.headers.get('Cookie') || '';
       const match = cookie.match(/session=([a-f0-9]+)/);
-      const session = await env.DB.prepare('SELECT user_id FROM sessions WHERE token = ?').bind(match[1]).first();
-      const profile = await env.DB.prepare('SELECT avatar, bio FROM profiles WHERE user_id = ?').bind(session.user_id).first();
-      return jsonResponse({ avatar: profile ? profile.avatar : null, bio: profile ? profile.bio : '' });
+      const session = await env.DB.prepare('SELECT user_id, (SELECT username FROM users WHERE id = sessions.user_id) as username FROM sessions WHERE token = ?').bind(match[1]).first();
+      const profile = await env.DB.prepare('SELECT avatar, cover, bio FROM profiles WHERE user_id = ?').bind(session.user_id).first();
+      const postCount = await env.DB.prepare('SELECT COUNT(*) as c FROM posts WHERE user_id = ?').bind(session.user_id).first();
+      return jsonResponse({ username: session.username, avatar: profile ? profile.avatar : null, cover: profile ? profile.cover : null, bio: profile ? profile.bio : '', postCount: postCount.c });
+    }
+
+    if (url.pathname === '/api/profile/user' && request.method === 'GET') {
+      const uname = url.searchParams.get('username');
+      const user = await env.DB.prepare('SELECT id, username FROM users WHERE username = ?').bind(uname).first();
+      const profile = await env.DB.prepare('SELECT avatar, cover, bio FROM profiles WHERE user_id = ?').bind(user.id).first();
+      const postCount = await env.DB.prepare('SELECT COUNT(*) as c FROM posts WHERE user_id = ?').bind(user.id).first();
+      const { results } = await env.DB.prepare('SELECT id, image, caption, created_at FROM posts WHERE user_id = ? ORDER BY id DESC').bind(user.id).all();
+      return jsonResponse({ username: user.username, avatar: profile ? profile.avatar : null, cover: profile ? profile.cover : null, bio: profile ? profile.bio : '', postCount: postCount.c, posts: results });
     }
 
     if (url.pathname === '/api/profile' && request.method === 'POST') {
@@ -143,9 +153,13 @@ export default {
       const match = cookie.match(/session=([a-f0-9]+)/);
       const session = await env.DB.prepare('SELECT user_id FROM sessions WHERE token = ?').bind(match[1]).first();
       const body = await request.json().catch(() => null);
+      const existing = await env.DB.prepare('SELECT avatar, cover, bio FROM profiles WHERE user_id = ?').bind(session.user_id).first();
+      const avatar = body.avatar !== undefined ? body.avatar : (existing ? existing.avatar : null);
+      const cover = body.cover !== undefined ? body.cover : (existing ? existing.cover : null);
+      const bio = body.bio !== undefined ? body.bio : (existing ? existing.bio : '');
       await env.DB.prepare(
-        'INSERT INTO profiles (user_id, avatar, bio) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET avatar = excluded.avatar, bio = excluded.bio'
-      ).bind(session.user_id, body.avatar || null, body.bio || '').run();
+        'INSERT INTO profiles (user_id, avatar, cover, bio) VALUES (?, ?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET avatar = excluded.avatar, cover = excluded.cover, bio = excluded.bio'
+      ).bind(session.user_id, avatar, cover, bio).run();
       return jsonResponse({ success: true });
     }
 

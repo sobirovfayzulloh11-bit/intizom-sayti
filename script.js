@@ -822,3 +822,133 @@ async function loadFeed(){
     feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Xatolik yuz berdi</p>';
   }
 }
+
+// ==== PROFIL SAHIFASI ====
+const myProfileBtn = document.getElementById('myProfileBtn');
+const profileBack = document.getElementById('profileBack');
+const profilePage = document.getElementById('profilePage');
+const profileCover = document.getElementById('profileCover');
+const profileAvatarImg = document.getElementById('profileAvatarImg');
+const profileUsername = document.getElementById('profileUsername');
+const profileBio = document.getElementById('profileBio');
+const profilePostCount = document.getElementById('profilePostCount');
+const profileEditControls = document.getElementById('profileEditControls');
+const profileGrid = document.getElementById('profileGrid');
+const avatarInput = document.getElementById('avatarInput');
+const coverInput = document.getElementById('coverInput');
+const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+const changeCoverBtn = document.getElementById('changeCoverBtn');
+const bioInput = document.getElementById('bioInput');
+const saveBioBtn = document.getElementById('saveBioBtn');
+
+const DEFAULT_AVATAR = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"%3E%3Ccircle cx="20" cy="20" r="20" fill="%231a1a1e"/%3E%3C/svg%3E';
+
+function showProfileScreen(){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  profilePage.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+async function loadMyProfile(){
+  showProfileScreen();
+  profileEditControls.style.display = 'flex';
+  try {
+    const res = await fetch('/api/profile');
+    const data = await res.json();
+    renderProfile(data, true);
+    const postsRes = await fetch('/api/posts');
+    const postsData = await postsRes.json();
+    const myPosts = (postsData.posts || []).filter(p => p.username === data.username);
+    renderProfileGrid(myPosts);
+  } catch(err){}
+}
+
+async function loadUserProfile(username){
+  showProfileScreen();
+  profileEditControls.style.display = 'none';
+  try {
+    const res = await fetch('/api/profile/user?username=' + encodeURIComponent(username));
+    const data = await res.json();
+    if(data.error){ alert(data.error); return; }
+    renderProfile(data, false);
+    renderProfileGrid(data.posts || []);
+  } catch(err){}
+}
+
+function renderProfile(data, editable){
+  profileCover.style.backgroundImage = data.cover ? 'url(' + data.cover + ')' : 'none';
+  profileAvatarImg.src = data.avatar || DEFAULT_AVATAR;
+  profileUsername.textContent = data.username;
+  profileBio.textContent = data.bio || '';
+  profilePostCount.textContent = (data.postCount || 0) + ' ta post';
+  if(editable) bioInput.value = data.bio || '';
+}
+
+function renderProfileGrid(posts){
+  profileGrid.innerHTML = '';
+  if(!posts || posts.length === 0){
+    profileGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-faint);">Hali postlar yoq</p>';
+    return;
+  }
+  posts.forEach(function(p){
+    const img = document.createElement('img');
+    img.src = p.image;
+    profileGrid.appendChild(img);
+  });
+}
+
+if(myProfileBtn) myProfileBtn.addEventListener('click', loadMyProfile);
+if(profileBack) profileBack.addEventListener('click', function(){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  window.scrollTo(0,0);
+});
+
+if(changeAvatarBtn) changeAvatarBtn.addEventListener('click', function(){ avatarInput.click(); });
+if(changeCoverBtn) changeCoverBtn.addEventListener('click', function(){ coverInput.click(); });
+
+if(avatarInput) avatarInput.addEventListener('change', async function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const base64 = await resizeImage(file, 300);
+  profileAvatarImg.src = base64;
+  await fetch('/api/profile', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ avatar: base64 })
+  });
+});
+
+if(coverInput) coverInput.addEventListener('change', async function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const base64 = await resizeImage(file, 900);
+  profileCover.style.backgroundImage = 'url(' + base64 + ')';
+  await fetch('/api/profile', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cover: base64 })
+  });
+});
+
+if(saveBioBtn) saveBioBtn.addEventListener('click', async function(){
+  await fetch('/api/profile', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ bio: bioInput.value.trim() })
+  });
+  profileBio.textContent = bioInput.value.trim();
+  alert('Bio saqlandi!');
+});
+
+// Lentada username bosilganda profil ochilishi
+const _origLoadFeed = loadFeed;
+loadFeed = async function(){
+  await _origLoadFeed();
+  document.querySelectorAll('.feed-username').forEach(function(el){
+    el.classList.add('feed-username-link');
+    el.addEventListener('click', function(){
+      loadUserProfile(el.textContent);
+    });
+  });
+};
