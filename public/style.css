@@ -520,3 +520,62 @@ footer { text-align:center; padding:30px 20px 10px; color:var(--text-faint); fon
 .profile-stat { text-align:center; }
 .profile-stat b { display:block; font-size:1rem; color:var(--text); }
 .profile-stat span { font-size:0.75rem; color:var(--text-faint); }
+
+/* ==== MOON PREMIUM LIGHT DESIGN SYSTEM ==== */
+body {
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+}
+.sky-bg { display:none !important; }
+.brush-bg {
+  position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.9;
+}
+.brush-bg svg { width:100%; height:100%; }
+
+.moon-logo {
+  position:fixed; top:24px; left:24px; z-index:100;
+  font-family:'Playfair Display',serif; font-style:italic; font-weight:400;
+  font-size:1.5rem; color:#1a1a1a;
+}
+
+.sidebar-nav {
+  position:fixed; top:0; left:0; height:100vh; width:80px; z-index:90;
+  display:none; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+  background:rgba(255,255,255,0.7); backdrop-filter:blur(20px);
+  border-right:1px solid rgba(0,0,0,0.06);
+}
+.side-btn {
+  background:none; border:none; width:56px; height:56px; border-radius:16px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  color:#9a9a9a; cursor:pointer; font-size:0.62rem; font-weight:600;
+}
+.side-btn svg { width:22px; height:22px; }
+.side-btn.active { background:#f4f0ff; color:#8b5cf6; }
+
+@media (min-width:900px){
+  .sidebar-nav { display:flex; }
+  .screen, .bottom-nav { margin-left:80px; }
+  .bottom-nav { display:none; }
+}
+
+/* Kartalar — oq, katta radius, yumshoq soya */
+.card, .streak-card, .overall-tracker, .week-chart, .achievements, .about,
+.challenge-card, .quote-box, .modal-box, .feed-post, .post-form-box, .gate-box {
+  background:#ffffff !important;
+  border:none !important;
+  border-radius:24px !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.06) !important;
+  position:relative; z-index:1;
+}
+.card { border-left:none !important; }
+
+header, .cat-title, .cat-desc {
+  color:#1a1a1a !important;
+}
+h1, h2 { color:#1a1a1a !important; }
+p, .subtitle, .text-soft { color:#6b6b6b !important; }
+
+.reels-empty {
+  display:flex; align-items:center; justify-content:center;
+  height:60vh; color:#9a9a9a; font-size:1rem;
+}

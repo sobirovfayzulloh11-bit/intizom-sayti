@@ -20,7 +20,37 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg" class="moon-photo" alt="Oy">
     <p class="splash-text">MOON</p>
   </div>
-    <div class="sky-bg"></div>
+    <div class="brush-bg">
+    <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+      <path d="M-50,120 C150,40 300,220 500,140 S800,60 1050,180" stroke="#8b5cf6" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.55"/>
+      <path d="M-50,320 C200,260 350,420 550,340 S850,260 1050,380" stroke="#ec4899" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.5"/>
+      <path d="M-50,520 C180,460 380,620 560,540 S820,460 1050,560" stroke="#3b82f6" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.5"/>
+      <path d="M-50,700 C220,640 340,800 540,720 S800,650 1050,760" stroke="#06b6d4" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.5"/>
+      <path d="M-50,880 C200,820 380,960 580,890 S850,830 1050,930" stroke="#22c55e" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.45"/>
+      <path d="M-50,200 C250,320 420,80 620,220 S880,340 1050,240" stroke="#eab308" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.4"/>
+      <path d="M-50,600 C230,500 400,700 600,600 S870,500 1050,650" stroke="#f97316" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.45"/>
+    </svg>
+  </div>
+  <div class="moon-logo">MOON</div>
+  <nav class="sidebar-nav">
+    <button class="side-btn active" data-nav="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="side-btn" data-nav="feed">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="9" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      <span>Lenta</span>
+    </button>
+    <button class="side-btn" data-nav="reels">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="3"/><path d="M10 9l5 3-5 3z"/></svg>
+      <span>Reels</span>
+    </button>
+    <button class="side-btn" data-nav="profilePage">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+      <span>Profil</span>
+    </button>
+  </nav>
+  <div class="sky-bg"></div>
   <div id="confettiLayer"></div>
 
   <section id="authGate" class="auth-gate">
@@ -238,6 +268,13 @@
       <img id="navAvatar" class="nav-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b8b93' stroke-width='2'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21v-1a8 8 0 0116 0v1'/%3E%3C/svg%3E">
     </button>
   </nav>
+
+  <section class="screen" id="reels">
+    <button class="back-btn" id="reelsBack">â Orqaga</button>
+    <div class="reels-empty">
+      <p>Reels tez orada qo'shiladi</p>
+    </div>
+  </section>
 
   <script src="script.js"></script>
   </body>

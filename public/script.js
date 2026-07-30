@@ -1268,3 +1268,36 @@ loadUserProfile = async function(username){
   await _origLoadUserProfile(username);
   await renderFollowButton(username, false);
 };
+
+// ==== SIDEBAR NAVIGATION ====
+const sideBtns = document.querySelectorAll('.side-btn');
+const reelsBack = document.getElementById('reelsBack');
+
+sideBtns.forEach(function(btn){
+  btn.addEventListener('click', async function(){
+    const target = btn.dataset.nav;
+    sideBtns.forEach(b => b.classList.toggle('active', b === btn));
+    navBtns.forEach(b => b.classList.toggle('active', b.dataset.nav === target));
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+    if(target === 'home'){
+      document.getElementById('home').classList.add('active');
+    } else if(target === 'feed'){
+      document.getElementById('feed').classList.add('active');
+      await loadFeed();
+    } else if(target === 'reels'){
+      document.getElementById('reels').classList.add('active');
+    } else if(target === 'profilePage'){
+      await loadMyProfile();
+    }
+    window.scrollTo(0,0);
+  });
+});
+
+if(reelsBack) reelsBack.addEventListener('click', function(){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  sideBtns.forEach(b => b.classList.toggle('active', b.dataset.nav === 'home'));
+  navBtns.forEach(b => b.classList.toggle('active', b.dataset.nav === 'home'));
+  window.scrollTo(0,0);
+});
