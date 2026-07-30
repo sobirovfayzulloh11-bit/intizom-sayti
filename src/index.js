@@ -5,6 +5,7 @@ import { handleDataRoutes } from './routes/data.js';
 import { handleStoryRoutes } from './routes/stories.js';
 import { handleNotificationRoutes } from './routes/notifications.js';
 import { handleSearchRoutes } from './routes/search.js';
+import { handleFollowRoutes } from './routes/follow.js';
 
 export default {
   async fetch(request, env) {
@@ -17,7 +18,8 @@ export default {
       handleDataRoutes,
       handleStoryRoutes,
       handleNotificationRoutes,
-      handleSearchRoutes
+      handleSearchRoutes,
+      handleFollowRoutes
     ];
 
     for (const handler of handlers) {

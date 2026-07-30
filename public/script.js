@@ -1155,3 +1155,116 @@ async function loadComments(postId, container){
     container.innerHTML = '';
   }
 }
+
+// ==== DISCOVER / FOLLOWING TABS ====
+const tabDiscover = document.getElementById('tabDiscover');
+const tabFollowing = document.getElementById('tabFollowing');
+
+if(tabDiscover) tabDiscover.addEventListener('click', async function(){
+  tabDiscover.classList.add('active');
+  tabFollowing.classList.remove('active');
+  await loadFeed();
+});
+
+if(tabFollowing) tabFollowing.addEventListener('click', async function(){
+  tabFollowing.classList.add('active');
+  tabDiscover.classList.remove('active');
+  await loadFollowingFeed();
+});
+
+async function loadFollowingFeed(){
+  feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Yuklanmoqda...</p>';
+  try {
+    const res = await fetch('/api/feed/following');
+    const data = await res.json();
+    feedList.innerHTML = '';
+    if(!res.ok){
+      feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">' + (data.error || 'Xatolik') + '</p>';
+      return;
+    }
+    if(!data.posts || data.posts.length === 0){
+      feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Hali hech kimni kuzatmayapsiz</p>';
+      return;
+    }
+    renderPostList(data.posts);
+  } catch(err){
+    feedList.innerHTML = '<p style="text-align:center;color:var(--text-faint);">Xatolik yuz berdi</p>';
+  }
+}
+
+function renderPostList(posts){
+  posts.forEach(function(post){
+    const div = document.createElement('div');
+    div.className = 'feed-post';
+    const avatarSrc = post.avatar || DEFAULT_AVATAR;
+    div.innerHTML =
+      '<div class="feed-post-head">' +
+        '<img class="feed-avatar" src="' + avatarSrc + '">' +
+        '<div><div class="feed-username">' + post.username + '</div>' +
+        '<div class="feed-time">' + timeAgo(post.created_at) + '</div></div>' +
+      '</div>' +
+      '<img class="feed-image" src="' + post.image + '">' +
+      '<div class="feed-actions">' +
+        '<button class="like-btn" data-post-id="' + post.id + '">' +
+          '<svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.8 4.6c-1.7-1.6-4.4-1.6-6 0L12 7.3 9.2 4.6c-1.7-1.6-4.4-1.6-6 0-1.7 1.7-1.7 4.4 0 6.1L12 21l8.8-10.3c1.7-1.7 1.7-4.4 0-6.1z"/></svg>' +
+          '<span class="like-count">0</span>' +
+        '</button>' +
+        '<button class="comment-toggle-btn" data-post-id="' + post.id + '">Izohlar</button>' +
+      '</div>' +
+      (post.caption ? '<div class="feed-caption">' + post.caption + '</div>' : '') +
+      '<div class="comments-box" id="comments-' + post.id + '" style="display:none">' +
+        '<div class="comments-list"></div>' +
+        '<form class="comment-form"><input type="text" placeholder="Izoh yozing..." required><button type="submit">Yubor</button></form>' +
+      '</div>';
+    feedList.appendChild(div);
+    setupPostInteractions(div, post.id);
+  });
+  document.querySelectorAll('.feed-username').forEach(function(el){
+    el.classList.add('feed-username-link');
+    el.addEventListener('click', function(){ loadUserProfile(el.textContent); });
+  });
+}
+
+// ==== FOLLOW TUGMASI (profil sahifasida) ====
+async function renderFollowButton(username, isOwnProfile){
+  let existing = document.getElementById('followBtnContainer');
+  if(existing) existing.remove();
+
+  if(isOwnProfile) return;
+
+  const container = document.createElement('div');
+  container.id = 'followBtnContainer';
+  const statusRes = await fetch('/api/follow/status?username=' + encodeURIComponent(username));
+  const status = await statusRes.json();
+
+  container.innerHTML =
+    '<div class="profile-stats">' +
+      '<div class="profile-stat"><b>' + status.followerCount + '</b><span>Kuzatuvchi</span></div>' +
+      '<div class="profile-stat"><b>' + status.followingCount + '</b><span>Kuzatilgan</span></div>' +
+    '</div>' +
+    '<button id="followActionBtn" class="follow-btn ' + (status.isFollowing ? 'following' : '') + '">' +
+      (status.isFollowing ? 'Kuzatilmoqda' : 'Kuzatish') +
+    '</button>';
+
+  profileBio.insertAdjacentElement('afterend', container);
+
+  document.getElementById('followActionBtn').addEventListener('click', async function(){
+    const res = await fetch('/api/follow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username })
+    });
+    const data = await res.json();
+    if(res.ok){
+      renderFollowButton(username, false);
+    } else {
+      alert(data.error || 'Xatolik');
+    }
+  });
+}
+
+const _origLoadUserProfile = loadUserProfile;
+loadUserProfile = async function(username){
+  await _origLoadUserProfile(username);
+  await renderFollowButton(username, false);
+};
