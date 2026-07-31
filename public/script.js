@@ -1301,3 +1301,87 @@ if(reelsBack) reelsBack.addEventListener('click', function(){
   navBtns.forEach(b => b.classList.toggle('active', b.dataset.nav === 'home'));
   window.scrollTo(0,0);
 });
+
+// ==== SEARCH ====
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+const searchBack = document.getElementById('searchBack');
+let searchTimeout = null;
+
+if(searchInput){
+  searchInput.addEventListener('input', function(){
+    clearTimeout(searchTimeout);
+    const q = searchInput.value.trim();
+    if(q.length === 0){
+      searchResults.innerHTML = '';
+      return;
+    }
+    searchTimeout = setTimeout(async function(){
+      try {
+        const res = await fetch('/api/search?q=' + encodeURIComponent(q));
+        const data = await res.json();
+        renderSearchResults(data);
+      } catch(err){}
+    }, 300);
+  });
+}
+
+function renderSearchResults(data){
+  searchResults.innerHTML = '';
+
+  if(data.users && data.users.length > 0){
+    const title = document.createElement('div');
+    title.className = 'search-section-title';
+    title.textContent = 'Foydalanuvchilar';
+    searchResults.appendChild(title);
+
+    data.users.forEach(function(u){
+      const div = document.createElement('div');
+      div.className = 'search-user-item';
+      div.innerHTML = '<img src="' + (u.avatar || DEFAULT_AVATAR) + '"><span>' + u.username + '</span>';
+      div.addEventListener('click', function(){ loadUserProfile(u.username); });
+      searchResults.appendChild(div);
+    });
+  }
+
+  if(data.posts && data.posts.length > 0){
+    const title = document.createElement('div');
+    title.className = 'search-section-title';
+    title.textContent = 'Postlar';
+    searchResults.appendChild(title);
+
+    const grid = document.createElement('div');
+    grid.className = 'search-posts-grid';
+    data.posts.forEach(function(p){
+      const img = document.createElement('img');
+      img.src = p.image;
+      grid.appendChild(img);
+    });
+    searchResults.appendChild(grid);
+  }
+
+  if((!data.users || data.users.length === 0) && (!data.posts || data.posts.length === 0)){
+    searchResults.innerHTML = '<p style="text-align:center;color:#9a9a9a;">Hech narsa topilmadi</p>';
+  }
+}
+
+if(searchBack) searchBack.addEventListener('click', function(){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  sideBtns.forEach(b => b.classList.toggle('active', b.dataset.nav === 'home'));
+  window.scrollTo(0,0);
+});
+
+// Sidebar'da searchPage tugmasini ishga tushirish
+document.querySelectorAll('.side-btn').forEach(function(btn){
+  if(btn.dataset.nav === 'searchPage'){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('searchPage').classList.add('active');
+      sideBtns.forEach(b => b.classList.toggle('active', b === btn));
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+      window.scrollTo(0,0);
+    });
+  }
+});

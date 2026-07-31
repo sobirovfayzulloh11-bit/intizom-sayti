@@ -33,6 +33,10 @@
   </div>
   <div class="moon-logo">MOON</div>
   <nav class="sidebar-nav">
+    <button class="side-btn" data-nav="searchPage">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+      <span>Search</span>
+    </button>
     <button class="side-btn active" data-nav="home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>
       <span>Home</span>
@@ -274,6 +278,15 @@
     <div class="reels-empty">
       <p>Reels tez orada qo'shiladi</p>
     </div>
+  </section>
+
+  <section class="screen" id="searchPage">
+    <button class="back-btn" id="searchBack">â Orqaga</button>
+    <h1 class="cat-title">Qidiruv</h1>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Foydalanuvchi yoki post qidiring..." class="search-input">
+    </div>
+    <div id="searchResults" class="search-results"></div>
   </section>
 
   <script src="script.js"></script>

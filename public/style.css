@@ -579,3 +579,21 @@ p, .subtitle, .text-soft { color:#6b6b6b !important; }
   display:flex; align-items:center; justify-content:center;
   height:60vh; color:#9a9a9a; font-size:1rem;
 }
+
+/* ==== SEARCH ==== */
+.search-box { max-width:560px; margin:20px auto 0; padding:0 20px; }
+.search-input {
+  width:100%; padding:14px 18px; border-radius:16px;
+  background:#f5f5f7; border:none; font-size:0.95rem; color:#1a1a1a;
+}
+.search-results { max-width:560px; margin:20px auto 0; padding:0 20px; }
+.search-user-item {
+  display:flex; align-items:center; gap:12px; padding:12px;
+  background:#fff; border-radius:16px; margin-bottom:8px; cursor:pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+.search-user-item img { width:44px; height:44px; border-radius:50%; object-fit:cover; }
+.search-user-item span { font-weight:600; color:#1a1a1a; }
+.search-section-title { font-size:0.85rem; color:#9a9a9a; margin:16px 0 8px; font-weight:600; }
+.search-posts-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; }
+.search-posts-grid img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; }
