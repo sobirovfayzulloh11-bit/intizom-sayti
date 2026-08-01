@@ -1,0 +1,92 @@
+:root {
+  /* Ranglar */
+  --md-bg: #FFFFFF;
+  --md-primary: #6C5CE7;
+  --md-secondary: #A855F7;
+  --md-accent: #FF6EC7;
+  --md-text-primary: #111111;
+  --md-text-secondary: #666666;
+  --md-border: #ECECEC;
+  --md-success: #22C55E;
+  --md-warning: #F59E0B;
+  --md-danger: #EF4444;
+
+  /* Radius */
+  --md-radius-sm: 12px;
+  --md-radius-md: 18px;
+  --md-radius-lg: 24px;
+
+  /* Spacing (8px tizimi) */
+  --md-sp-1: 8px;
+  --md-sp-2: 16px;
+  --md-sp-3: 24px;
+  --md-sp-4: 32px;
+  --md-sp-6: 48px;
+  --md-sp-8: 64px;
+
+  /* Shadow */
+  --md-shadow: 0 8px 30px rgba(17,17,17,0.06);
+  --md-shadow-hover: 0 12px 40px rgba(17,17,17,0.09);
+
+  /* Animatsiya */
+  --md-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --md-dur: 250ms;
+}
+
+/* ==== BAZA ==== */
+.md-root {
+  background: var(--md-bg);
+  color: var(--md-text-primary);
+  font-family: 'Inter', sans-serif;
+}
+
+/* ==== KARTA ==== */
+.md-card {
+  background: #fff;
+  border: 1px solid var(--md-border);
+  border-radius: var(--md-radius-lg);
+  box-shadow: var(--md-shadow);
+  padding: var(--md-sp-3);
+  transition: box-shadow var(--md-dur) var(--md-ease), transform var(--md-dur) var(--md-ease);
+}
+.md-card:active { transform: scale(0.98); box-shadow: var(--md-shadow-hover); }
+
+/* ==== TUGMALAR ==== */
+.md-btn {
+  height: 52px;
+  border-radius: var(--md-radius-md);
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0 var(--md-sp-3);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--md-sp-1);
+  transition: transform var(--md-dur) var(--md-ease), opacity var(--md-dur) var(--md-ease);
+}
+.md-btn:active { transform: scale(0.97); }
+.md-btn-primary { background: var(--md-primary); color: #fff; }
+.md-btn-secondary { background: #fff; color: var(--md-text-primary); border: 1px solid var(--md-border); }
+
+/* ==== INPUT ==== */
+.md-input {
+  height: 52px;
+  border-radius: var(--md-radius-md);
+  border: 1px solid var(--md-border);
+  background: #fff;
+  padding: 0 var(--md-sp-2);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--md-text-primary);
+  width: 100%;
+}
+.md-input::placeholder { color: var(--md-text-secondary); }
+.md-input:focus { outline: none; border-color: var(--md-primary); }
+
+/* ==== TIPOGRAFIYA ==== */
+.md-h1 { font-size: 1.9rem; font-weight: 700; color: var(--md-text-primary); }
+.md-h2 { font-size: 1.3rem; font-weight: 700; color: var(--md-text-primary); }
+.md-text-secondary { color: var(--md-text-secondary); font-size: 0.9rem; }
+
+/* ==== IKONKA (SVG) ULAMASI ==== */
+.md-icon { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
