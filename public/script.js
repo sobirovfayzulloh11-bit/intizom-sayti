@@ -1389,3 +1389,52 @@ document.querySelectorAll('.side-btn').forEach(function(btn){
     });
   }
 });
+
+// ==== HERO PREMIUM ====
+function updateHeroGreeting(){
+  const h = new Date().getHours();
+  const el = document.getElementById('heroGreeting');
+  if(!el) return;
+  if(h < 6) el.textContent = 'Xayrli tun';
+  else if(h < 12) el.textContent = 'Xayrli tong';
+  else if(h < 18) el.textContent = 'Xayrli kun';
+  else el.textContent = 'Xayrli kech';
+}
+
+function updateHeroXpLevel(streak){
+  const xp = streak * 10;
+  const level = Math.floor(xp / 100) + 1;
+  const xpEl = document.getElementById('heroXpNum');
+  const lvlEl = document.getElementById('heroLevelNum');
+  if(xpEl) xpEl.textContent = xp;
+  if(lvlEl) lvlEl.textContent = level;
+}
+
+const _origRefreshHomeStatsHero = refreshHomeStats;
+refreshHomeStats = function(){
+  _origRefreshHomeStatsHero();
+  const streakEl = document.getElementById('currentStreak');
+  const heroStreakEl = document.getElementById('heroStreakNum');
+  if(streakEl && heroStreakEl){
+    heroStreakEl.textContent = streakEl.textContent;
+    updateHeroXpLevel(parseInt(streakEl.textContent, 10) || 0);
+  }
+};
+
+const _origCheckAuthStatusHero = checkAuthStatus;
+checkAuthStatus = async function(){
+  await _origCheckAuthStatusHero();
+  const nameEl = document.getElementById('heroName');
+  if(nameEl && authStatus && authStatus.textContent){
+    nameEl.textContent = authStatus.textContent.replace('Salom, ', '');
+  }
+};
+
+const heroAvatarImg = document.getElementById('heroAvatar');
+const _origUpdateNavAvatarHero = updateNavAvatar;
+updateNavAvatar = async function(){
+  await _origUpdateNavAvatarHero();
+  if(heroAvatarImg && navAvatar && navAvatar.src) heroAvatarImg.src = navAvatar.src;
+};
+
+updateHeroGreeting();
