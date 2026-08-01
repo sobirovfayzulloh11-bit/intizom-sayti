@@ -1,0 +1,45 @@
+/* ==== MOON HOME v2 — Design System asosida ==== */
+
+body { background: var(--md-bg); }
+.sky-bg, .brush-bg { opacity: 0.15 !important; }
+
+.hero-block {
+  max-width: 560px; margin: 0 auto;
+  padding: var(--md-sp-6) var(--md-sp-2) var(--md-sp-1);
+}
+.hero-greeting { color: var(--md-text-secondary); font-size: 0.9rem; margin-bottom: 4px; }
+.hero-name { font-family: 'Inter', sans-serif; font-size: 1.9rem; font-weight: 700; color: var(--md-text-primary); }
+.hero-avatar {
+  width: 52px; height: 52px; border-radius: 50%; object-fit: cover;
+  border: 2px solid var(--md-border);
+}
+.hero-motivation-strong {
+  font-size: 1.15rem; font-weight: 600; color: var(--md-text-primary);
+  margin-top: var(--md-sp-2); line-height: 1.5;
+}
+
+.notify-icon-btn {
+  position: absolute; top: var(--md-sp-6); right: var(--md-sp-2);
+  width: 44px; height: 44px; border-radius: var(--md-radius-sm);
+  background: #fff; border: 1px solid var(--md-border);
+  box-shadow: var(--md-shadow);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--md-text-secondary); cursor: pointer;
+}
+
+.hero-stats { display: flex; gap: var(--md-sp-2); margin-top: var(--md-sp-3); }
+.hero-stat-card {
+  flex: 1; background: #fff; border: 1px solid var(--md-border);
+  border-radius: var(--md-radius-lg); box-shadow: var(--md-shadow);
+  padding: var(--md-sp-2) var(--md-sp-1); text-align: center;
+}
+.hero-stat-icon-svg { width: 22px; height: 22px; stroke: var(--md-primary); fill: none; stroke-width: 1.8; margin-bottom: 6px; }
+.hero-stat-num { display: block; font-size: 1.4rem; font-weight: 700; color: var(--md-text-primary); }
+.hero-stat-label { font-size: 0.7rem; color: var(--md-text-secondary); }
+.hero-stat-bar { width: 100%; height: 4px; background: var(--md-border); border-radius: 4px; margin-top: var(--md-sp-1); overflow: hidden; }
+.hero-stat-fill { height: 100%; width: 0%; background: var(--md-primary); border-radius: 4px; transition: width var(--md-dur) var(--md-ease); }
+
+.stories-row { padding: var(--md-sp-2); max-width: 560px; margin: 0 auto; }
+.story-avatar-ring { background: linear-gradient(135deg, var(--md-primary), var(--md-accent)); }
+
+.notify-btn { display: none; }
