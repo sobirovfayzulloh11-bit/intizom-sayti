@@ -84,30 +84,40 @@
         </div>
         <img id="heroAvatar" class="hero-avatar" src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23c9c9cc%27 stroke-width=%271.5%27%3E%3Ccircle cx=%2712%27 cy=%278%27 r=%274%27/%3E%3Cpath d=%27M4 21v-1a8 8 0 0116 0v1%27/%3E%3C/svg%3E">
       </div>
-      <p class="hero-motivation" id="heroMotivation">Har kuni bir qadam oldinga.</p>
+      <h2 class="hero-motivation-strong" id="heroMotivation">Har kuni bir qadam oldinga.</h2>
 
       <div class="hero-stats">
         <div class="hero-stat-card">
+          <span class="hero-stat-icon">ð¥</span>
           <span class="hero-stat-num" id="heroStreakNum">0</span>
           <span class="hero-stat-label">Streak</span>
+          <div class="hero-stat-bar"><div class="hero-stat-fill" id="heroStreakBar"></div></div>
         </div>
         <div class="hero-stat-card">
+          <span class="hero-stat-icon">â¡</span>
           <span class="hero-stat-num" id="heroXpNum">0</span>
           <span class="hero-stat-label">XP</span>
+          <div class="hero-stat-bar"><div class="hero-stat-fill" id="heroXpBar"></div></div>
         </div>
         <div class="hero-stat-card">
+          <span class="hero-stat-icon">â­</span>
           <span class="hero-stat-num" id="heroLevelNum">1</span>
           <span class="hero-stat-label">Level</span>
+          <div class="hero-stat-bar"><div class="hero-stat-fill" id="heroLevelBar"></div></div>
         </div>
       </div>
 
-      <button id="notifyBtn" class="notify-btn">Bildirishnomalarni yoqish</button>
-      <p id="notifyStatus" class="notify-status"></p>
+      <button id="notifyBtn" class="notify-icon-btn" title="Bildirishnomalar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+      </button>
+      <p id="notifyStatus" class="notify-status" style="display:none"></p>
       <div class="auth-row">
         <span id="authStatus" class="auth-status"></span>
         <button id="logoutBtn" class="auth-btn" style="display:none">Chiqish</button>
       </div>
     </header>
+
+    <div class="stories-row" id="storiesRow"></div>
 
     <div class="quote-box reveal">
       <p id="dailyQuote"></p>

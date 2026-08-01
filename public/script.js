@@ -1438,3 +1438,42 @@ updateNavAvatar = async function(){
 };
 
 updateHeroGreeting();
+
+// ==== STORIES QATORI (avatarlar orqali) ====
+async function loadStoriesRow(){
+  const row = document.getElementById('storiesRow');
+  if(!row) return;
+  try {
+    const res = await fetch('/api/posts');
+    const data = await res.json();
+    const seen = new Set();
+    const unique = [];
+    (data.posts || []).forEach(function(p){
+      if(!seen.has(p.username)){ seen.add(p.username); unique.push(p); }
+    });
+    row.innerHTML = unique.slice(0, 15).map(function(p){
+      return '<div class="story-item" data-username="' + p.username + '">' +
+        '<div class="story-avatar-ring"><img src="' + (p.avatar || DEFAULT_AVATAR) + '"></div>' +
+        '<span>' + p.username + '</span></div>';
+    }).join('');
+    row.querySelectorAll('.story-item').forEach(function(el){
+      el.addEventListener('click', function(){ loadUserProfile(el.dataset.username); });
+    });
+  } catch(err){}
+}
+
+const _origRefreshHomeStatsBar = refreshHomeStats;
+refreshHomeStats = function(){
+  _origRefreshHomeStatsBar();
+  const streak = parseInt(document.getElementById('currentStreak').textContent, 10) || 0;
+  const xp = streak * 10;
+  const level = Math.floor(xp / 100) + 1;
+  const streakBar = document.getElementById('heroStreakBar');
+  const xpBar = document.getElementById('heroXpBar');
+  const levelBar = document.getElementById('heroLevelBar');
+  if(streakBar) streakBar.style.width = Math.min(streak * 3, 100) + '%';
+  if(xpBar) xpBar.style.width = (xp % 100) + '%';
+  if(levelBar) levelBar.style.width = Math.min(level * 10, 100) + '%';
+};
+
+loadStoriesRow();

@@ -634,3 +634,30 @@ p, .subtitle, .text-soft { color:#6b6b6b !important; }
 .hero-stat-label { font-size:0.72rem; color:#9a9a9a; }
 .hero-block .notify-btn { margin-top:24px; }
 .hero-block .auth-row { justify-content:flex-start; }
+
+.notify-icon-btn {
+  position:absolute; top:50px; right:20px;
+  width:36px; height:36px; border-radius:50%;
+  background:#f5f5f7; border:none; display:flex; align-items:center; justify-content:center;
+  color:#6b6b6b; cursor:pointer;
+}
+.notify-icon-btn svg { width:18px; height:18px; }
+.hero-motivation-strong {
+  font-size:1.3rem; font-weight:700; color:#1a1a1a; margin-top:16px; line-height:1.4;
+}
+.hero-stat-icon { font-size:1.2rem; display:block; margin-bottom:4px; }
+.hero-stat-bar { width:100%; height:4px; background:#f0f0f0; border-radius:4px; margin-top:8px; overflow:hidden; }
+.hero-stat-fill { height:100%; width:0%; background:linear-gradient(90deg,#a855f7,#ec4899); border-radius:4px; transition:width 0.6s ease; }
+.stories-row {
+  display:flex; gap:14px; overflow-x:auto; padding:20px; max-width:560px; margin:0 auto;
+  -webkit-overflow-scrolling:touch;
+}
+.stories-row::-webkit-scrollbar { display:none; }
+.story-item { flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:6px; width:64px; }
+.story-avatar-ring {
+  width:60px; height:60px; border-radius:50%; padding:3px;
+  background:linear-gradient(135deg,#a855f7,#ec4899,#f97316);
+  display:flex; align-items:center; justify-content:center;
+}
+.story-avatar-ring img { width:100%; height:100%; border-radius:50%; object-fit:cover; border:2px solid #fff; }
+.story-item span { font-size:0.68rem; color:#6b6b6b; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:64px; }
