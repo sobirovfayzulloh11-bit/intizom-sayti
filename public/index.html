@@ -245,10 +245,13 @@
     <button class="back-btn" id="profileBack">â Orqaga</button>
     <div class="profile-cover" id="profileCover"></div>
     <div class="profile-header">
-      <img id="profileAvatarImg" class="profile-avatar-big">
+      <div class="profile-top-row">
+        <img id="profileAvatarImg" class="profile-avatar-big">
+        <div id="profileStatsRow" class="profile-stats-row"></div>
+      </div>
       <h2 id="profileUsername"></h2>
       <p id="profileBio" class="profile-bio"></p>
-      <span id="profilePostCount" class="profile-count"></span>
+      <div id="followBtnSlot"></div>
       <div id="profileEditControls" class="profile-edit-controls" style="display:none">
         <input type="file" id="avatarInput" accept="image/*" style="display:none">
         <input type="file" id="coverInput" accept="image/*" style="display:none">
@@ -258,6 +261,7 @@
         <button id="saveBioBtn" class="preset-btn">Bio saqlash</button>
       </div>
     </div>
+
     <div id="profileGrid" class="profile-grid"></div>
   </section>
 

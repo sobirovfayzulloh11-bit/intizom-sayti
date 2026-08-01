@@ -597,3 +597,23 @@ p, .subtitle, .text-soft { color:#6b6b6b !important; }
 .search-section-title { font-size:0.85rem; color:#9a9a9a; margin:16px 0 8px; font-weight:600; }
 .search-posts-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; }
 .search-posts-grid img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; }
+
+/* ==== PROFIL — INSTAGRAM UYUBI ==== */
+.profile-top-row {
+  display:flex; align-items:center; gap:20px;
+  max-width:400px; margin:0 auto;
+}
+.profile-top-row .profile-avatar-big {
+  margin:0; flex-shrink:0; width:80px; height:80px;
+}
+.profile-stats-row {
+  flex:1; display:flex; justify-content:space-around;
+}
+.profile-stats-row .profile-stat { text-align:center; }
+.profile-stats-row .profile-stat b { display:block; font-size:1.1rem; }
+.profile-stats-row .profile-stat span { font-size:0.72rem; color:#9a9a9a; }
+
+#profileUsername { text-align:left; margin-top:14px; }
+.profile-bio { text-align:left; }
+#followBtnSlot .follow-btn { width:100%; margin-top:12px; }
+#followBtnSlot .profile-stats { display:none; }

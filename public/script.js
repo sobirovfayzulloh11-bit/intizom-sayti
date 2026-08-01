@@ -856,6 +856,7 @@ async function loadMyProfile(){
     const res = await fetch('/api/profile');
     const data = await res.json();
     renderProfile(data, true);
+    await renderFollowButton(data.username, true);
     const postsRes = await fetch('/api/posts');
     const postsData = await postsRes.json();
     const myPosts = (postsData.posts || []).filter(p => p.username === data.username);
@@ -880,8 +881,13 @@ function renderProfile(data, editable){
   profileAvatarImg.src = data.avatar || DEFAULT_AVATAR;
   profileUsername.textContent = data.username;
   profileBio.textContent = data.bio || '';
-  profilePostCount.textContent = (data.postCount || 0) + ' ta post';
   if(editable) bioInput.value = data.bio || '';
+
+  const statsRow = document.getElementById('profileStatsRow');
+  statsRow.innerHTML =
+    '<div class="profile-stat"><b>' + (data.postCount || 0) + '</b><span>Post</span></div>' +
+    '<div class="profile-stat" id="statFollowers"><b>0</b><span>Kuzatuvchi</span></div>' +
+    '<div class="profile-stat" id="statFollowing"><b>0</b><span>Kuzatilgan</span></div>';
 }
 
 function renderProfileGrid(posts){
@@ -1227,28 +1233,26 @@ function renderPostList(posts){
 
 // ==== FOLLOW TUGMASI (profil sahifasida) ====
 async function renderFollowButton(username, isOwnProfile){
-  let existing = document.getElementById('followBtnContainer');
-  if(existing) existing.remove();
+  const slot = document.getElementById('followBtnSlot');
+  slot.innerHTML = '';
 
-  if(isOwnProfile) return;
-
-  const container = document.createElement('div');
-  container.id = 'followBtnContainer';
   const statusRes = await fetch('/api/follow/status?username=' + encodeURIComponent(username));
   const status = await statusRes.json();
 
-  container.innerHTML =
-    '<div class="profile-stats">' +
-      '<div class="profile-stat"><b>' + status.followerCount + '</b><span>Kuzatuvchi</span></div>' +
-      '<div class="profile-stat"><b>' + status.followingCount + '</b><span>Kuzatilgan</span></div>' +
-    '</div>' +
-    '<button id="followActionBtn" class="follow-btn ' + (status.isFollowing ? 'following' : '') + '">' +
-      (status.isFollowing ? 'Kuzatilmoqda' : 'Kuzatish') +
-    '</button>';
+  const followersEl = document.querySelector('#statFollowers b');
+  const followingEl = document.querySelector('#statFollowing b');
+  if(followersEl) followersEl.textContent = status.followerCount;
+  if(followingEl) followingEl.textContent = status.followingCount;
 
-  profileBio.insertAdjacentElement('afterend', container);
+  if(isOwnProfile) return;
 
-  document.getElementById('followActionBtn').addEventListener('click', async function(){
+  const btn = document.createElement('button');
+  btn.id = 'followActionBtn';
+  btn.className = 'follow-btn' + (status.isFollowing ? ' following' : '');
+  btn.textContent = status.isFollowing ? 'Kuzatilmoqda' : 'Kuzatish';
+  slot.appendChild(btn);
+
+  btn.addEventListener('click', async function(){
     const res = await fetch('/api/follow', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
