@@ -1477,3 +1477,83 @@ refreshHomeStats = function(){
 };
 
 loadStoriesRow();
+
+// ==== HOME V3: PROFILE CARD, TRENDING, SUGGESTED ====
+async function loadProfileCardV3(){
+  try {
+    const res = await fetch('/api/profile');
+    if(!res.ok) return;
+    const data = await res.json();
+    document.getElementById('profileCardAvatar').src = data.avatar || DEFAULT_AVATAR;
+    document.getElementById('profileCardName').textContent = data.username;
+    document.getElementById('profileCardUsername').textContent = '@' + data.username;
+    document.getElementById('profileCardPosts').textContent = data.postCount || 0;
+
+    const statusRes = await fetch('/api/follow/status?username=' + encodeURIComponent(data.username));
+    const status = await statusRes.json();
+    document.getElementById('profileCardFollowers').textContent = status.followerCount || 0;
+    document.getElementById('profileCardFollowing').textContent = status.followingCount || 0;
+  } catch(err){}
+}
+
+async function loadTrendingV3(){
+  try {
+    const res = await fetch('/api/trending');
+    const data = await res.json();
+    const preview = document.getElementById('trendingPreview');
+    const cardList = document.getElementById('trendingCardList');
+    if(!data.posts || data.posts.length === 0){
+      if(preview) preview.innerHTML = '<p style="color:var(--md-text-secondary);font-size:0.85rem;">Hali trend postlar yoq</p>';
+      if(cardList) cardList.innerHTML = '<p style="color:var(--md-text-secondary);font-size:0.85rem;">Malumot yoq</p>';
+      return;
+    }
+    if(preview){
+      preview.innerHTML = data.posts.slice(0,8).map(function(p){
+        return '<div class="trending-item-v3" data-username="' + p.username + '"><img src="' + p.image + '"></div>';
+      }).join('');
+      preview.querySelectorAll('.trending-item-v3').forEach(function(el){
+        el.addEventListener('click', function(){ loadUserProfile(el.dataset.username); });
+      });
+    }
+    if(cardList){
+      cardList.innerHTML = data.posts.slice(0,5).map(function(p){
+        return '<div class="trending-card-row" data-username="' + p.username + '"><img src="' + p.image + '"><span>' + p.username + '</span></div>';
+      }).join('');
+      cardList.querySelectorAll('.trending-card-row').forEach(function(el){
+        el.addEventListener('click', function(){ loadUserProfile(el.dataset.username); });
+      });
+    }
+  } catch(err){}
+}
+
+async function loadSuggestedUsersV3(){
+  try {
+    const res = await fetch('/api/posts');
+    const data = await res.json();
+    const list = document.getElementById('suggestedUsersList');
+    if(!list) return;
+    const seen = new Set();
+    const unique = [];
+    (data.posts || []).forEach(function(p){
+      if(!seen.has(p.username)){ seen.add(p.username); unique.push(p); }
+    });
+    if(unique.length === 0){
+      list.innerHTML = '<p style="color:var(--md-text-secondary);font-size:0.85rem;">Hali foydalanuvchi yoq</p>';
+      return;
+    }
+    list.innerHTML = unique.slice(0,5).map(function(u){
+      return '<div class="suggested-user-row" data-username="' + u.username + '"><img src="' + (u.avatar || DEFAULT_AVATAR) + '"><span>' + u.username + '</span></div>';
+    }).join('');
+    list.querySelectorAll('.suggested-user-row').forEach(function(el){
+      el.addEventListener('click', function(){ loadUserProfile(el.dataset.username); });
+    });
+  } catch(err){}
+}
+
+const _origCheckAuthStatusV3 = checkAuthStatus;
+checkAuthStatus = async function(){
+  await _origCheckAuthStatusV3();
+  loadProfileCardV3();
+  loadTrendingV3();
+  loadSuggestedUsersV3();
+};

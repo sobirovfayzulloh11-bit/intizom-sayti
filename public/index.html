@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="design-tokens.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="home-v2.css">
+  <link rel="stylesheet" href="home-v3.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
   <meta property="og:title" content="Intizom — Har kuni bir qadam oldinga">
   <meta property="og:description" content="Erta turish, sport, ilm olish va chalg'ituvchilarni kamaytirish uchun shaxsiy jadval va kunlik kuzatuv.">
@@ -77,127 +78,147 @@
       <p id="authError" class="auth-error"></p>
     </div>
   </section>
-  <section class="screen" id="home">
-    <header class="reveal hero-block">
-      <div class="hero-top">
-        <div>
-          <p class="hero-greeting" id="heroGreeting">Xayrli kun</p>
-          <h1 class="hero-name" id="heroName">Moon</h1>
+  <section class="screen active" id="home">
+  <div class="home-grid">
+    <main class="home-center">
+      <div class="hero-v3 reveal">
+        <div class="hero-v3-top">
+          <div class="hero-v3-text">
+            <p class="hero-v3-greeting" id="heroGreeting">Good morning,</p>
+            <h1 class="hero-v3-name" id="heroName">Moon</h1>
+            <p class="hero-v3-sub" id="heroMotivation">Har kuni bir qadam oldinga.</p>
+          </div>
+          <div class="hero-v3-actions">
+            <button class="hero-action-btn" id="heroSearchBtn" title="Qidiruv">
+              <svg class="md-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+            </button>
+            <button class="hero-action-btn" id="heroCreateBtn" title="Yangi post">
+              <svg class="md-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <button class="hero-action-btn notify-icon-btn" id="notifyBtn" title="Bildirishnomalar">
+              <svg class="md-icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+            </button>
+            <img id="heroAvatar" class="hero-v3-avatar" src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23999%27 stroke-width=%271.5%27%3E%3Ccircle cx=%2712%27 cy=%278%27 r=%274%27/%3E%3Cpath d=%27M4 21v-1a8 8 0 0116 0v1%27/%3E%3C/svg%3E">
+          </div>
         </div>
-        <img id="heroAvatar" class="hero-avatar" src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23c9c9cc%27 stroke-width=%271.5%27%3E%3Ccircle cx=%2712%27 cy=%278%27 r=%274%27/%3E%3Cpath d=%27M4 21v-1a8 8 0 0116 0v1%27/%3E%3C/svg%3E">
-      </div>
-      <h2 class="hero-motivation-strong" id="heroMotivation">Har kuni bir qadam oldinga.</h2>
-
-      <div class="hero-stats">
-        <div class="hero-stat-card">
-          <svg class="md-icon hero-stat-icon-svg" viewBox="0 0 24 24"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-2-1-3-1-3s1 4-2 4-2-3-1-5c-3 1-5 4-5 7a5 5 0 0010 0c0-5-4-7-5-10z"/></svg>
-          <span class="hero-stat-num" id="heroStreakNum">0</span>
-          <span class="hero-stat-label">Streak</span>
-          <div class="hero-stat-bar"><div class="hero-stat-fill" id="heroStreakBar"></div></div>
-        </div>
-        <div class="hero-stat-card">
-          <svg class="md-icon hero-stat-icon-svg" viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>
-          <span class="hero-stat-num" id="heroXpNum">0</span>
-          <span class="hero-stat-label">XP</span>
-          <div class="hero-stat-bar"><div class="hero-stat-fill" id="heroXpBar"></div></div>
-        </div>
-        <div class="hero-stat-card">
-          <svg class="md-icon hero-stat-icon-svg" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7-5.4-4.7 7.1-.6z"/></svg>
-          <span class="hero-stat-num" id="heroLevelNum">1</span>
-          <span class="hero-stat-label">Level</span>
-          <div class="hero-stat-bar"><div class="hero-stat-fill" id="heroLevelBar"></div></div>
+        <p id="notifyStatus" class="notify-status" style="display:none"></p>
+        <div style="display:none">
+          <span id="authStatus"></span>
+          <button id="logoutBtn">Chiqish</button>
+          <span id="currentStreak">0</span>
+          <span id="bestStreak">0</span>
         </div>
       </div>
 
-      <button id="notifyBtn" class="notify-icon-btn" title="Bildirishnomalar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
-      </button>
-      <p id="notifyStatus" class="notify-status" style="display:none"></p>
-      <div class="auth-row">
-        <span id="authStatus" class="auth-status"></span>
-        <button id="logoutBtn" class="auth-btn" style="display:none">Chiqish</button>
+      <div class="stat-cards-row reveal">
+        <div class="stat-card-v3">
+          <svg class="stat-card-icon streak" viewBox="0 0 24 24"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-2-1-3-1-3s1 4-2 4-2-3-1-5c-3 1-5 4-5 7a5 5 0 0010 0c0-5-4-7-5-10z"/></svg>
+          <span class="stat-card-num" id="heroStreakNum">0</span>
+          <span class="stat-card-label">Days Streak</span>
+          <div class="stat-card-bar"><div class="stat-card-fill" id="heroStreakBar"></div></div>
+        </div>
+        <div class="stat-card-v3">
+          <svg class="stat-card-icon level" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7-5.4-4.7 7.1-.6z"/></svg>
+          <span class="stat-card-num" id="heroLevelNum">1</span>
+          <span class="stat-card-label">Level</span>
+          <div class="stat-card-bar"><div class="stat-card-fill" id="heroLevelBar"></div></div>
+        </div>
+        <div class="stat-card-v3">
+          <svg class="stat-card-icon progress" viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+          <span class="stat-card-num" id="overallLabel">0 / 0</span>
+          <span class="stat-card-label">Today Progress</span>
+          <div class="stat-card-bar"><div class="stat-card-fill" id="overallFill"></div></div>
+        </div>
       </div>
-    </header>
 
-    <div class="stories-row" id="storiesRow"></div>
+      <div class="stories-row reveal" id="storiesRow"></div>
 
-    <div class="quote-box reveal">
-      <p id="dailyQuote"></p>
-    </div>
+      <div class="section-title reveal">Trending</div>
+      <div class="trending-preview reveal" id="trendingPreview"></div>
 
-    <div class="challenge-card reveal" id="challengeCard">
-      <span class="challenge-tag">Bugungi challenge</span>
-      <p id="challengeText"></p>
-      <button id="challengeBtn" class="challenge-btn">Bajardim</button>
-    </div>
-
-    <div class="streak-row reveal">
-      <div class="streak-card">
-        <span class="streak-num" id="currentStreak">0</span>
-        <span class="streak-label">Joriy streak (kun)</span>
+      <div class="challenge-card reveal" id="challengeCard">
+        <span class="challenge-tag">Bugungi challenge</span>
+        <p id="challengeText"></p>
+        <button id="challengeBtn" class="challenge-btn">Bajardim</button>
       </div>
-      <div class="streak-card">
-        <span class="streak-num" id="bestStreak">0</span>
-        <span class="streak-label">Eng yaxshi natija</span>
-      </div>
-    </div>
 
-    <div class="overall-tracker reveal">
-      <div class="tracker-head">
-        <h2>Bugungi umumiy natija</h2>
-        <span class="progress-label" id="overallLabel">0 / 0</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="overallFill"></div></div>
-      <button id="shareBtn" class="share-btn">Natijani ulashish</button>
-      <div class="backup-row">
-        <button id="exportBtn" class="backup-btn">Zaxira yuklab olish</button>
-        <button id="importBtn" class="backup-btn">Zaxiradan tiklash</button>
-      </div>
-      <input type="file" id="importFile" accept=".json" style="display:none">
-    </div>
+      <div class="quote-box reveal"><p id="dailyQuote"></p></div>
 
-    <div class="week-chart reveal">
-      <h2>Oxirgi 7 kun</h2>
-      <div class="bars" id="weekBars"></div>
-    </div>
-
-    <div class="achievements reveal">
-      <h2>Yutuqlar</h2>
-      <div class="badge-list" id="badgeList"></div>
-    </div>
-
-    <section class="cards">
-      <div class="card card--erta reveal" data-target="cat-erta">
-        <span class="card-index">01</span>
-        <h2>Erta turish</h2>
-        <p>Kuningizni tartibli boshlash uchun shaxsiy jadval tuzing.</p>
+      <div class="week-chart reveal">
+        <h2>Oxirgi 7 kun</h2>
+        <div class="bars" id="weekBars"></div>
       </div>
-      <div class="card card--sport reveal" data-target="cat-sport">
-        <span class="card-index">02</span>
-        <h2>Sport bilan shug'ullanish</h2>
-        <p>Jismoniy faollik rejangizni tuzib, kuzatib boring.</p>
-      </div>
-      <div class="card card--ilm reveal" data-target="cat-ilm">
-        <span class="card-index">03</span>
-        <h2>Ilm olish</h2>
-        <p>Har kuni bilim orttirish uchun o'quv jadvali yarating.</p>
-      </div>
-      <div class="card card--chalg reveal" data-target="cat-chalg">
-        <span class="card-index">04</span>
-        <h2>Chalg'ituvchilarni kamaytirish</h2>
-        <p>Vaqtingizni himoya qiluvchi qoidalar belgilang.</p>
-      </div>
-    </section>
 
-    <section class="about reveal">
-      <h2>Intizom haqida</h2>
-      <p>Intizom — kichik, ammo barqaror qadamlar orqali katta o'zgarishlarga erishish uchun yaratilgan shaxsiy hamroh. Har kuni bir necha daqiqa vaqt ajratib, o'z maqsadlaringizni kuzatib boring — natija asta-sekin, ammo ishonchli ravishda ko'rina boshlaydi.</p>
-    </section>
+      <div class="achievements reveal">
+        <h2>Yutuqlar</h2>
+        <div class="badge-list" id="badgeList"></div>
+      </div>
 
-    <footer><p>© 2026 Intizom loyihasi</p></footer>
-  </section>
+      <div class="about reveal">
+        <h2>Moon haqida</h2>
+        <p>Moon - kichik, ammo barqaror qadamlar orqali katta ozgarishlarga erishish uchun yaratilgan shaxsiy hamroh va ijtimoiy platforma.</p>
+      </div>
 
-  <section class="screen" id="cat-erta" data-category="erta">
+      <footer><p>&copy; 2026 Moon loyihasi</p></footer>
+    </main>
+
+    <aside class="home-right reveal">
+      <div class="profile-card-v3" id="profileCardV3">
+        <div class="profile-card-v3-ring"><img id="profileCardAvatar" src=""></div>
+        <h3 id="profileCardName">-</h3>
+        <p id="profileCardUsername" class="text-secondary-v3">-</p>
+        <div class="profile-card-stats">
+          <div><b id="profileCardPosts">0</b><span>Posts</span></div>
+          <div><b id="profileCardFollowers">0</b><span>Followers</span></div>
+          <div><b id="profileCardFollowing">0</b><span>Following</span></div>
+        </div>
+      </div>
+
+      <div class="daily-goals-card">
+        <h3>Daily Goals</h3>
+        <div class="cards">
+          <div class="card card--erta reveal" data-target="cat-erta">
+            <span class="card-index">01</span>
+            <h2>Erta turish</h2>
+            <p>Kuningizni tartibli boshlash uchun shaxsiy jadval tuzing.</p>
+          </div>
+          <div class="card card--sport reveal" data-target="cat-sport">
+            <span class="card-index">02</span>
+            <h2>Sport bilan shug ullanish</h2>
+            <p>Jismoniy faollik rejangizni tuzib, kuzatib boring.</p>
+          </div>
+          <div class="card card--ilm reveal" data-target="cat-ilm">
+            <span class="card-index">03</span>
+            <h2>Ilm olish</h2>
+            <p>Har kuni bilim orttirish uchun oquv jadvali yarating.</p>
+          </div>
+          <div class="card card--chalg reveal" data-target="cat-chalg">
+            <span class="card-index">04</span>
+            <h2>Chalgituvchilarni kamaytirish</h2>
+            <p>Vaqtingizni himoya qiluvchi qoidalar belgilang.</p>
+          </div>
+        </div>
+        <button id="shareBtn" class="share-btn">Natijani ulashish</button>
+        <div class="backup-row">
+          <button id="exportBtn" class="backup-btn">Zaxira yuklab olish</button>
+          <button id="importBtn" class="backup-btn">Zaxiradan tiklash</button>
+        </div>
+        <input type="file" id="importFile" accept=".json" style="display:none">
+      </div>
+
+      <div class="trending-card">
+        <h3>Trending</h3>
+        <div id="trendingCardList"></div>
+      </div>
+
+      <div class="suggested-users-card">
+        <h3>Suggested for you</h3>
+        <div id="suggestedUsersList"></div>
+      </div>
+    </aside>
+  </div>
+
+<section class="screen" id="cat-erta" data-category="erta">
     <button class="back-btn">← Orqaga</button>
     <h1 class="cat-title">Erta turish</h1>
     <p class="cat-desc">Erta turish miya faoliyatini yaxshilaydi va kunni tartibli boshlashga yordam beradi. O'zingizga mos jadval tuzing yoki tayyor namunani qo'llang.</p>
