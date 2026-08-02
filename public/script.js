@@ -1553,7 +1553,6 @@ async function loadSuggestedUsersV3(){
 const _origCheckAuthStatusV3 = checkAuthStatus;
 checkAuthStatus = async function(){
   await _origCheckAuthStatusV3();
-  loadProfileCardV3();
   loadTrendingV3();
   loadSuggestedUsersV3();
 };
