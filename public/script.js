@@ -1556,3 +1556,125 @@ checkAuthStatus = async function(){
   loadTrendingV3();
   loadSuggestedUsersV3();
 };
+
+// ==== PROFILE V3 ====
+function renderProfileStatsV3(postCount, followers, following){
+  const row = document.getElementById('profileStatsRow');
+  row.innerHTML =
+    '<div class="p-stat"><b>' + postCount + '</b><span>Posts</span></div>' +
+    '<div class="p-stat" id="pStatFollowers"><b>' + followers + '</b><span>Followers</span></div>' +
+    '<div class="p-stat" id="pStatFollowing"><b>' + following + '</b><span>Following</span></div>';
+}
+
+function renderGamifyV3(progress){
+  const box = document.getElementById('gamifyRowV3');
+  if(!progress){ box.style.display = 'none'; return; }
+  box.style.display = 'grid';
+  document.getElementById('profileStreakNum').textContent = progress.streak;
+  document.getElementById('profileLevelNum').textContent = progress.level;
+  document.getElementById('profileXpNum').textContent = progress.xp;
+  const todayNum = document.getElementById('profileTodayNum');
+  const todayBar = document.getElementById('profileTodayBar');
+  if(progress.today){
+    todayNum.textContent = progress.today.done + '/' + progress.today.total;
+    todayBar.style.width = (progress.today.total ? (progress.today.done/progress.today.total*100) : 0) + '%';
+  }
+}
+
+const _origLoadMyProfileV3 = loadMyProfile;
+loadMyProfile = async function(){
+  showProfileScreen();
+  document.getElementById('profileEditControls').style.display = 'flex';
+  document.getElementById('privacySettingsV3').style.display = 'flex';
+  document.getElementById('profileActionsV3').innerHTML =
+    '<button class="md-btn md-btn-secondary" id="editProfileBtnV3">Edit Profile</button>' +
+    '<button class="md-btn md-btn-secondary" id="shareProfileBtnV3">Share Profile</button>';
+
+  try {
+    const res = await fetch('/api/profile');
+    const data = await res.json();
+    document.getElementById('profileCover').style.backgroundImage = data.cover ? 'url(' + data.cover + ')' : '';
+    document.getElementById('profileAvatarImg').src = data.avatar || DEFAULT_AVATAR;
+    document.getElementById('profileUsername').textContent = data.username;
+    document.getElementById('profileHandle').textContent = '@' + data.username;
+    document.getElementById('profileBio').textContent = data.bio || '';
+    document.getElementById('bioInput').value = data.bio || '';
+
+    const statusRes = await fetch('/api/follow/status?username=' + encodeURIComponent(data.username));
+    const status = await statusRes.json();
+    renderProfileStatsV3(data.postCount || 0, status.followerCount, status.followingCount);
+
+    const dataRes = await fetch('/api/data');
+    const userData = await dataRes.json();
+    const d = userData.data || {};
+    const streak = d.streak || 0;
+    const today = d.today || null;
+    renderGamifyV3({ streak: streak, level: Math.floor(streak*10/100)+1, xp: streak*10, today: today });
+
+    const toggle = document.getElementById('progressPublicToggle');
+    toggle.checked = !!d.progressPublic;
+    toggle.onchange = async function(){
+      d.progressPublic = toggle.checked;
+      await fetch('/api/data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(d)
+      });
+    };
+
+    const postsRes = await fetch('/api/posts');
+    const postsData = await postsRes.json();
+    const myPosts = (postsData.posts || []).filter(p => p.username === data.username);
+    renderProfileGrid(myPosts);
+  } catch(err){}
+};
+
+const _origLoadUserProfileV3 = loadUserProfile;
+loadUserProfile = async function(username){
+  showProfileScreen();
+  document.getElementById('profileEditControls').style.display = 'none';
+  document.getElementById('privacySettingsV3').style.display = 'none';
+
+  try {
+    const res = await fetch('/api/profile/user?username=' + encodeURIComponent(username));
+    const data = await res.json();
+    if(data.error){ alert(data.error); return; }
+
+    document.getElementById('profileCover').style.backgroundImage = data.cover ? 'url(' + data.cover + ')' : '';
+    document.getElementById('profileAvatarImg').src = data.avatar || DEFAULT_AVATAR;
+    document.getElementById('profileUsername').textContent = data.username;
+    document.getElementById('profileHandle').textContent = '@' + data.username;
+    document.getElementById('profileBio').textContent = data.bio || '';
+
+    const statusRes = await fetch('/api/follow/status?username=' + encodeURIComponent(username));
+    const status = await statusRes.json();
+    renderProfileStatsV3(data.postCount || 0, status.followerCount, status.followingCount);
+
+    renderGamifyV3(data.progress);
+
+    const actions = document.getElementById('profileActionsV3');
+    actions.innerHTML =
+      '<button class="md-btn ' + (status.isFollowing ? 'md-btn-secondary' : 'md-btn-primary') + '" id="followActionBtn">' +
+      (status.isFollowing ? 'Following' : 'Follow') + '</button>';
+    document.getElementById('followActionBtn').addEventListener('click', async function(){
+      const r = await fetch('/api/follow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username })
+      });
+      if(r.ok) loadUserProfile(username);
+    });
+
+    renderProfileGrid(data.posts || []);
+  } catch(err){}
+};
+
+// ==== TABS ====
+document.querySelectorAll('.profile-tab-v3').forEach(function(tab){
+  tab.addEventListener('click', function(){
+    document.querySelectorAll('.profile-tab-v3').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tabContent' + tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)).classList.add('active');
+  });
+});

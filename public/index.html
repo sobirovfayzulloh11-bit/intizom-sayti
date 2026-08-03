@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="home-v2.css">
   <link rel="stylesheet" href="home-v3.css">
+  <link rel="stylesheet" href="profile-v3.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
   <meta property="og:title" content="Intizom — Har kuni bir qadam oldinga">
   <meta property="og:description" content="Erta turish, sport, ilm olish va chalg'ituvchilarni kamaytirish uchun shaxsiy jadval va kunlik kuzatuv.">
@@ -287,27 +288,89 @@
   </section>
 
   <section class="screen" id="profilePage">
-    <button class="back-btn" id="profileBack">â Orqaga</button>
-    <div class="profile-cover" id="profileCover"></div>
-    <div class="profile-header">
-      <div class="profile-top-row">
-        <img id="profileAvatarImg" class="profile-avatar-big">
-        <div id="profileStatsRow" class="profile-stats-row"></div>
+    <div class="profile-v3-wrap">
+      <button class="back-btn" id="profileBack">Orqaga</button>
+      <div class="profile-cover-v3" id="profileCover"></div>
+      <div class="profile-main-v3">
+        <div class="profile-avatar-wrap-v3">
+          <div class="profile-avatar-ring-v3"><img id="profileAvatarImg" class="profile-avatar-big"></div>
+          <span class="profile-online-dot"></span>
+        </div>
+        <h2 id="profileUsername" class="profile-name-v3"></h2>
+        <p class="profile-handle-v3" id="profileHandle"></p>
+        <p id="profileBio" class="profile-bio-v3"></p>
+
+        <div class="profile-actions-v3" id="profileActionsV3"></div>
+
+        <div class="profile-stats-v3" id="profileStatsRow"></div>
+
+        <div class="gamify-row-v3" id="gamifyRowV3" style="display:none">
+          <div class="stat-card-v3">
+            <svg class="stat-card-icon streak" viewBox="0 0 24 24"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-2-1-3-1-3s1 4-2 4-2-3-1-5c-3 1-5 4-5 7a5 5 0 0010 0c0-5-4-7-5-10z"/></svg>
+            <span class="stat-card-num" id="profileStreakNum">0</span>
+            <span class="stat-card-label">Day Streak</span>
+          </div>
+          <div class="stat-card-v3">
+            <svg class="stat-card-icon level" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7-5.4-4.7 7.1-.6z"/></svg>
+            <span class="stat-card-num" id="profileLevelNum">1</span>
+            <span class="stat-card-label">Level</span>
+          </div>
+          <div class="stat-card-v3">
+            <svg class="stat-card-icon progress" viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+            <span class="stat-card-num" id="profileXpNum">0</span>
+            <span class="stat-card-label">XP</span>
+          </div>
+          <div class="stat-card-v3">
+            <span class="stat-card-num" id="profileTodayNum">0/0</span>
+            <span class="stat-card-label">Today</span>
+            <div class="stat-card-bar"><div class="stat-card-fill" id="profileTodayBar"></div></div>
+          </div>
+        </div>
+
+        <div class="privacy-settings-v3" id="privacySettingsV3" style="display:none">
+          <div class="privacy-row-v3">
+            <span>Show my progress publicly</span>
+            <label class="toggle-switch-v3">
+              <input type="checkbox" id="progressPublicToggle">
+              <span class="toggle-slider-v3"></span>
+            </label>
+          </div>
+        </div>
+
+        <div id="profileEditControls" class="profile-edit-controls-v3" style="display:none">
+          <input type="file" id="avatarInput" accept="image/*" style="display:none">
+          <input type="file" id="coverInput" accept="image/*" style="display:none">
+          <button id="changeAvatarBtn" class="md-btn md-btn-secondary">Avatar</button>
+          <button id="changeCoverBtn" class="md-btn md-btn-secondary">Qopqoq</button>
+          <textarea id="bioInput" placeholder="Bio yozing..." class="post-caption"></textarea>
+          <button id="saveBioBtn" class="md-btn md-btn-primary">Bio saqlash</button>
+        </div>
       </div>
-      <h2 id="profileUsername"></h2>
-      <p id="profileBio" class="profile-bio"></p>
-      <div id="followBtnSlot"></div>
-      <div id="profileEditControls" class="profile-edit-controls" style="display:none">
-        <input type="file" id="avatarInput" accept="image/*" style="display:none">
-        <input type="file" id="coverInput" accept="image/*" style="display:none">
-        <button id="changeAvatarBtn" class="backup-btn">Avatar o'zgartirish</button>
-        <button id="changeCoverBtn" class="backup-btn">Qopqoq o'zgartirish</button>
-        <textarea id="bioInput" placeholder="Bio yozing..." class="post-caption"></textarea>
-        <button id="saveBioBtn" class="preset-btn">Bio saqlash</button>
+
+      <div class="profile-tabs-v3">
+        <button class="profile-tab-v3 active" data-tab="posts">Posts</button>
+        <button class="profile-tab-v3" data-tab="reels">Reels</button>
+        <button class="profile-tab-v3" data-tab="saved">Saved</button>
+        <button class="profile-tab-v3" data-tab="challenges">Challenges</button>
+        <button class="profile-tab-v3" data-tab="achievements">Achievements</button>
+      </div>
+
+      <div class="profile-tab-content active" id="tabContentPosts">
+        <div id="profileGrid" class="profile-grid"></div>
+      </div>
+      <div class="profile-tab-content" id="tabContentReels">
+        <p class="tab-empty-v3">Reels tez orada qoshiladi</p>
+      </div>
+      <div class="profile-tab-content" id="tabContentSaved">
+        <p class="tab-empty-v3">Saqlangan postlar tez orada</p>
+      </div>
+      <div class="profile-tab-content" id="tabContentChallenges">
+        <div id="profileChallengesList" class="activity-list-v3"></div>
+      </div>
+      <div class="profile-tab-content" id="tabContentAchievements">
+        <div id="profileAchievementsList" class="badge-list"></div>
       </div>
     </div>
-
-    <div id="profileGrid" class="profile-grid"></div>
   </section>
 
   <nav class="bottom-nav">

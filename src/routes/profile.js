@@ -35,13 +35,28 @@ export async function handleProfileRoutes(request, env, url) {
       'SELECT id, image, caption, created_at FROM posts WHERE user_id = ? ORDER BY id DESC'
     ).bind(user.id).all();
 
+    let progress = null;
+    const dataRow = await env.DB.prepare('SELECT data FROM user_data WHERE user_id = ?').bind(user.id).first();
+    if(dataRow){
+      const parsed = JSON.parse(dataRow.data);
+      if(parsed.progressPublic){
+        progress = {
+          streak: parsed.streak || 0,
+          bestStreak: parsed.bestStreak || 0,
+          xp: (parsed.streak || 0) * 10,
+          level: Math.floor(((parsed.streak || 0) * 10) / 100) + 1
+        };
+      }
+    }
+
     return jsonResponse({
       username: user.username,
       avatar: profile ? profile.avatar : null,
       cover: profile ? profile.cover : null,
       bio: profile ? profile.bio : '',
       postCount: postCount.c,
-      posts: results
+      posts: results,
+      progress: progress
     });
   }
 
