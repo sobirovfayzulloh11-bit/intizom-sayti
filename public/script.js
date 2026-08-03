@@ -1626,7 +1626,7 @@ loadMyProfile = async function(){
     const postsData = await postsRes.json();
     const myPosts = (postsData.posts || []).filter(p => p.username === data.username);
     renderProfileGrid(myPosts);
-  } catch(err){}
+  } catch(err){ alert("PROFILE ERROR: " + err.message); }
 };
 
 const _origLoadUserProfileV3 = loadUserProfile;
@@ -1666,7 +1666,7 @@ loadUserProfile = async function(username){
     });
 
     renderProfileGrid(data.posts || []);
-  } catch(err){}
+  } catch(err){ alert("USER PROFILE ERROR: " + err.message); }
 };
 
 // ==== TABS ====
