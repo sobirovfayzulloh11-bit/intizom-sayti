@@ -1,3 +1,4 @@
+alert("SCRIPT BOSHLANDI");
 const PRESETS = {
   erta: [
     ["06:00","Uyg'onish va yotoqni yig'ish"],
@@ -1678,3 +1679,4 @@ document.querySelectorAll('.profile-tab-v3').forEach(function(tab){
     document.getElementById('tabContent' + tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)).classList.add('active');
   });
 });
+alert("SCRIPT TUGADI");
