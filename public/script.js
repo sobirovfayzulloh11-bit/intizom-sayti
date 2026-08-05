@@ -1,4 +1,3 @@
-alert("SCRIPT BOSHLANDI");
 const PRESETS = {
   erta: [
     ["06:00","Uyg'onish va yotoqni yig'ish"],
@@ -973,7 +972,6 @@ function setActiveNav(target){
 navBtns.forEach(function(btn){
   btn.addEventListener('click', async function(){
     const target = btn.dataset.nav;
-    alert('NAV CLICK: ' + target);
     setActiveNav(target);
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
 
@@ -1482,19 +1480,25 @@ loadStoriesRow();
 
 // ==== HOME V3: PROFILE CARD, TRENDING, SUGGESTED ====
 async function loadProfileCardV3(){
+  const elAvatar = document.getElementById("profileCardAvatar");
+  if(!elAvatar) return;
   try {
-    const res = await fetch('/api/profile');
+    const res = await fetch("/api/profile");
     if(!res.ok) return;
     const data = await res.json();
-    document.getElementById('profileCardAvatar').src = data.avatar || DEFAULT_AVATAR;
-    document.getElementById('profileCardName').textContent = data.username;
-    document.getElementById('profileCardUsername').textContent = '@' + data.username;
-    document.getElementById('profileCardPosts').textContent = data.postCount || 0;
-
-    const statusRes = await fetch('/api/follow/status?username=' + encodeURIComponent(data.username));
+    elAvatar.src = data.avatar || DEFAULT_AVATAR;
+    const elName = document.getElementById("profileCardName");
+    const elUsername = document.getElementById("profileCardUsername");
+    const elPosts = document.getElementById("profileCardPosts");
+    if(elName) elName.textContent = data.username;
+    if(elUsername) elUsername.textContent = "@" + data.username;
+    if(elPosts) elPosts.textContent = data.postCount || 0;
+    const statusRes = await fetch("/api/follow/status?username=" + encodeURIComponent(data.username));
     const status = await statusRes.json();
-    document.getElementById('profileCardFollowers').textContent = status.followerCount || 0;
-    document.getElementById('profileCardFollowing').textContent = status.followingCount || 0;
+    const elFollowers = document.getElementById("profileCardFollowers");
+    const elFollowing = document.getElementById("profileCardFollowing");
+    if(elFollowers) elFollowers.textContent = status.followerCount || 0;
+    if(elFollowing) elFollowing.textContent = status.followingCount || 0;
   } catch(err){}
 }
 
@@ -1585,7 +1589,6 @@ function renderGamifyV3(progress){
 
 const _origLoadMyProfileV3 = loadMyProfile;
 loadMyProfile = async function(){
-  alert("loadMyProfile chaqirildi");
   showProfileScreen();
   document.getElementById('profileEditControls').style.display = 'flex';
   document.getElementById('privacySettingsV3').style.display = 'flex';
@@ -1681,4 +1684,3 @@ document.querySelectorAll('.profile-tab-v3').forEach(function(tab){
     document.getElementById('tabContent' + tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)).classList.add('active');
   });
 });
-alert("SCRIPT TUGADI");
