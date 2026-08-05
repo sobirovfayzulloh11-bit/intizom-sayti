@@ -973,6 +973,7 @@ function setActiveNav(target){
 navBtns.forEach(function(btn){
   btn.addEventListener('click', async function(){
     const target = btn.dataset.nav;
+    alert('NAV CLICK: ' + target);
     setActiveNav(target);
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
 
