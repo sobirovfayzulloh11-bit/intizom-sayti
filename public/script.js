@@ -1584,6 +1584,7 @@ function renderGamifyV3(progress){
 
 const _origLoadMyProfileV3 = loadMyProfile;
 loadMyProfile = async function(){
+  alert("loadMyProfile chaqirildi");
   showProfileScreen();
   document.getElementById('profileEditControls').style.display = 'flex';
   document.getElementById('privacySettingsV3').style.display = 'flex';
