@@ -850,7 +850,7 @@ function showProfileScreen(){
 }
 
 async function loadMyProfile(){
-  showProfileScreen();
+  showProfileScreen(); document.title = "PROFIL OCHILDI";
   profileEditControls.style.display = 'flex';
   try {
     const res = await fetch('/api/profile');
@@ -865,7 +865,7 @@ async function loadMyProfile(){
 }
 
 async function loadUserProfile(username){
-  showProfileScreen();
+  showProfileScreen(); document.title = "PROFIL OCHILDI";
   profileEditControls.style.display = 'none';
   try {
     const res = await fetch('/api/profile/user?username=' + encodeURIComponent(username));
@@ -1589,7 +1589,7 @@ function renderGamifyV3(progress){
 
 const _origLoadMyProfileV3 = loadMyProfile;
 loadMyProfile = async function(){
-  showProfileScreen();
+  showProfileScreen(); document.title = "PROFIL OCHILDI";
   document.getElementById('profileEditControls').style.display = 'flex';
   document.getElementById('privacySettingsV3').style.display = 'flex';
   document.getElementById('profileActionsV3').innerHTML =
@@ -1637,7 +1637,7 @@ loadMyProfile = async function(){
 
 const _origLoadUserProfileV3 = loadUserProfile;
 loadUserProfile = async function(username){
-  showProfileScreen();
+  showProfileScreen(); document.title = "PROFIL OCHILDI";
   document.getElementById('profileEditControls').style.display = 'none';
   document.getElementById('privacySettingsV3').style.display = 'none';
 
